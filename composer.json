@@ -1,7 +1,7 @@
 {
     "name": "zodream/helpers",
     "description": "string, array, time, pinyin etc",
-    "keywords": ["string, array, time, pinyin etc", "zodream"],
+    "keywords": ["string array time pinyin etc", "zodream"],
     "homepage": "https://github.com/zodream/helpers",
     "license": "Apache Licence 2.0",
     "authors": [
