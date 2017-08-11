@@ -193,11 +193,8 @@ class Tree {
 	 * @return array
 	 */
 	public function getTree($items) {
-	
 		$tree     = array(); //格式化好的树
-	
 		$newItems = array();
-	
 		foreach ($items as $value) {
 			$newItems[$value['id']] = $value;
 		}

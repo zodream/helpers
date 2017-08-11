@@ -6,8 +6,6 @@ namespace Zodream\Helpers;
 * 
 * @author Jason
 */
-use Zodream\Service\Config;
-use Zodream\Service\Factory;
 
 class Time {
 
@@ -17,10 +15,7 @@ class Time {
 	 * @param string $format
 	 * @return string
 	 */
-	public static function format($time = null, $format = null) {
-	    if (empty($format)) {
-	        $format = Config::formatter('datetime');
-        }
+	public static function format($time = null, $format = 'Y-m-d H:i:s') {
 		if (!is_numeric($time)) {
 			$format = $time;
 			$time = time();
@@ -142,7 +137,7 @@ class Time {
 		foreach ($tokens as $unit => $text) {
 			if ($differ < $unit) continue;
 			$numberOfUnits = floor($differ / $unit);
-			return Factory::i18n()->translate($text, ['time' => $numberOfUnits]);
+			return str_replace('{time}', $numberOfUnits, $text);
 		}
 		return self::format($time);
 	}

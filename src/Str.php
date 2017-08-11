@@ -381,7 +381,7 @@ class Str {
 			$re['big5']   = "/[\x01-\x7f]|[\x81-\xfe]([\x40-\x7e]|\xa1-\xfe])/";
 			preg_match_all($re[$charset], $str, $match);
 			if (count($match[0]) <= $length) return $str;
-			$slice = join("", array_slice($match[0], $start, $length));
+			$slice = join('', array_slice($match[0], $start, $length));
 		}
 		if ($suffix) return $slice."…";
 		return $slice;

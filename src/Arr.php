@@ -498,6 +498,18 @@ class Arr {
 		return array_keys($args) !== range(0, count($args) - 1);
 	}
 
+    /**
+     * 判断是否时多维数组
+     * @param $args
+     * @return bool
+     */
+	public static function isMultidimensional($args) {
+        if (!is_array($args)) {
+            return false;
+        }
+        return (bool)count(array_filter($args, 'is_array'));
+    }
+
 	/**
 	 * 取关联数组的第 n 个的键值
 	 * @param array $args

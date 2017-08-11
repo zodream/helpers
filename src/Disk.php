@@ -6,7 +6,19 @@ namespace Zodream\Helpers;
  * Date: 2016/12/1
  * Time: 22:13
  */
-class Path {
+class Disk {
+    /**
+     * 格式化容量
+     * @param $size
+     * @return string
+     */
+    public static function size($size) {
+        $sizes = array(" Bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB");
+        if ($size == 0) {
+            return('n/a');
+        }
+        return (round($size/pow(1024, ($i = floor(log($size, 1024)))), 2) . $sizes[$i]);
+    }
 
     /**
      * 获取两个路径的相对路径
