@@ -331,34 +331,6 @@ class Str {
         preg_match_all("/./u", $str, $ar);
         return count($ar[0]);
 	}
-
-	/**
-	 * UTF8字符串截取
-	 * @param string $str
-	 * @param int $start
-	 * @param int $length
-	 * @return bool|string
-	 */
-	public static function subString($str, $start = 0, $length = 0) {
-		if (empty($str)) {
-			return false;
-		}
-		if (function_exists('mb_substr')) {
-			if(func_num_args() >= 3) {
-				$end = func_get_arg(2);
-				return mb_substr($str,$start,$end,'utf-8');
-			}
-            mb_internal_encoding("UTF-8");
-            return mb_substr($str,$start);
-		}
-        $null = "";
-        preg_match_all("/./u", $str, $ar);
-        if (func_num_args() >= 3) {
-            $end = func_get_arg(2);
-            return join($null, array_slice($ar[0], $start, $end));
-        }
-        return join($null, array_slice($ar[0], $start));
-	}
 	
 	/*
 	 * 中文截取，支持gb2312,gbk,utf-8,big5
@@ -370,19 +342,9 @@ class Str {
 	 * @param $suffix 是否加尾缀
 	 */
 	
-	public static function subStr($str, $start, $length, $charset = 'utf-8', $suffix = true) {
-		if (function_exists("mb_substr")) {
-			if (mb_strlen($str, $charset) <= $length) return $str;
-			$slice = mb_substr($str, $start, $length, $charset);
-		} else {
-			$re['utf-8']  = "/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|[\xe0-\xef][\x80-\xbf]{2}|[\xf0-\xff][\x80-\xbf]{3}/";
-			$re['gb2312'] = "/[\x01-\x7f]|[\xb0-\xf7][\xa0-\xfe]/";
-			$re['gbk']    = "/[\x01-\x7f]|[\x81-\xfe][\x40-\xfe]/";
-			$re['big5']   = "/[\x01-\x7f]|[\x81-\xfe]([\x40-\x7e]|\xa1-\xfe])/";
-			preg_match_all($re[$charset], $str, $match);
-			if (count($match[0]) <= $length) return $str;
-			$slice = join('', array_slice($match[0], $start, $length));
-		}
+	public static function substr($str, $start, $length, $suffix = false) {
+        if (mb_strlen($str, 'utf-8') <= $length) return $str;
+        $slice = mb_substr($str, $start, $length, 'utf-8');
 		if ($suffix) return $slice."…";
 		return $slice;
 	}
