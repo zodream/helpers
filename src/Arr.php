@@ -166,7 +166,7 @@ class Arr {
      */
     public static function last($array, callable $callback = null, $default = null) {
         if (is_null($callback)) {
-            return empty($array) ? StringExpand::value($default) : end($array);
+            return empty($array) ? Str::value($default) : end($array);
         }
 
         return static::first(array_reverse($array, true), $callback, $default);
@@ -358,7 +358,7 @@ class Arr {
      */
     private static function _getValueByKeyWithDefault($key,array $args, $default = null) {
         //使用方法
-        list($temp, $def) = StringExpand::explode($key, ' ', 2, $default);
+        list($temp, $def) = Str::explode($key, ' ', 2, $default);
         $temps  = explode(':', $temp, 2);
         $oldKey = $temps[0];
         $newKey = end( $temps );
@@ -381,7 +381,7 @@ class Arr {
 		foreach (explode('.', $key) as $segment) {
 			if ((! is_array($array) || ! array_key_exists($segment, $array)) &&
 				(! $array instanceof \ArrayAccess || ! $array->offsetExists($segment))) {
-				return StringExpand::value($default);
+				return Str::value($default);
 			}
 
 			$array = $array[$segment];
