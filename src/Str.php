@@ -287,7 +287,12 @@ class Str {
      * @return bool
      */
 	public static function endWith($arg, $search) {
-	    return strrchr($arg, $search) == $search;
+        foreach ((array) $search as $needle) {
+            if ($needle != '' && strrchr($arg, $needle) === $needle) {
+                return true;
+            }
+        }
+        return false;
     }
 
 	/**
