@@ -8,8 +8,8 @@ class Xml {
     /**
      * @param string $xml
      * @param bool $isArray
-     * @return array|object
-     * @throws Xml\Exception
+     * @return array|object|mixed
+     * @throws \Exception
      */
     public static function decode($xml, $isArray = true) {
         if (!is_string($xml)) {
@@ -47,8 +47,8 @@ class Xml {
     /**
      *
      * 转化成标准Xml数组
-     * @param string $data
-     * @return array
+     * @param string|mixed $data
+     * @return array|integer
      */
     protected static function toSpecialArray($data) {
         if (is_integer($data)) {

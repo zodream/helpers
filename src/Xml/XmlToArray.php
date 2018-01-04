@@ -16,6 +16,8 @@ namespace Zodream\Helpers\Xml;
  *       $array = XML2Array::createArray($xml);
  */
 use DOMDocument;
+use Exception;
+
 class XmlToArray {
     private static $xml = null;
     private static $encoding = 'UTF-8';
