@@ -591,6 +591,32 @@ class Arr {
 		return $results;
 	}
 
+    /**
+     * 从二维数组中移除
+     * @param array $data
+     * @param array|string $keys
+     * @return array
+     */
+	public static function unset2D(array $data, $keys) {
+	    foreach ((array)$keys as $key => $item) {
+	        if (!is_array($item)) {
+	            unset($data[$item]);
+	            continue;
+            }
+            if (!isset($data[$key]) && !array_key_exists($key, $data)) {
+	            continue;
+            }
+            if (!is_array($data[$key])) {
+                unset($data[$key]);
+                continue;
+            }
+            foreach ($item as $value) {
+	            unset($data[$key][$value]);
+            }
+        }
+        return $data;
+    }
+
 	/**
 	 * 判断是否在二维数组中 if no return false; or return $key
 	 * @param string $needle
