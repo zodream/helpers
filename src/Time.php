@@ -16,7 +16,7 @@ class Time {
 	 * @return string
 	 */
 	public static function format($time = null, $format = 'Y-m-d H:i:s') {
-		if (!is_numeric($time)) {
+		if (!empty($time) && !is_numeric($time)) {
 			$format = $time;
 			$time = time();
 		}
