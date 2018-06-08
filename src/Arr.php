@@ -243,7 +243,7 @@ class Arr {
                 if ($target instanceof Collection) {
                     $target = $target->all();
                 } elseif (! is_array($target)) {
-                    return value($default);
+                    return Str::value($default);
                 }
 
                 $result = Arr::pluck($target, $key);
@@ -256,7 +256,7 @@ class Arr {
             } elseif (is_object($target) && isset($target->{$segment})) {
                 $target = $target->{$segment};
             } else {
-                return value($default);
+                return Str::value($default);
             }
         }
 
