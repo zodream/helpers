@@ -327,7 +327,7 @@ class Str {
      * @param string $separator
      * @return string
      */
-    public function unStudly($camelCaps, $separator='_') {
+    public static function unStudly($camelCaps, $separator='_') {
         return strtolower(preg_replace('/([a-z])([A-Z])/', "$1" . $separator . "$2", $camelCaps));
     }
 
