@@ -74,7 +74,6 @@ class Time {
      * @return float
      */
 	public static function millisecond() {
-        list($tmp1, $tmp2) = explode(' ', microtime());
-        return (float)sprintf('%.0f', (floatval($tmp1) + floatval($tmp2)) * 1000);
+        return microtime(true);
     }
 }
