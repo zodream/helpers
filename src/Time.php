@@ -69,7 +69,9 @@ class Time {
 		foreach ($tokens as $unit => $text) {
 			if ($differ < $unit) continue;
 			$numberOfUnits = floor($differ / $unit);
-			return str_replace('{time}', $numberOfUnits, $text);
+			return __($text, [
+			    'time' => $numberOfUnits
+            ]);
 		}
 		return self::format($time);
 	}
