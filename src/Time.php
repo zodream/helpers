@@ -38,16 +38,21 @@ class Time {
 	    return date('Y-m-d H:i:s', $time);
     }
 
-	/**
-	 * 获取时间是多久以前
-	 * @param $time
-	 * @return int|string
-	 */
-	public static function isTimeAgo($time){
+    /**
+     * 获取时间是多久以前
+     * @param $time
+     * @param int $maxSecond
+     * @param string $maxFormat
+     * @return int|string
+     */
+	public static function isTimeAgo($time, $maxSecond = 0, $maxFormat = 'Y-m-d'){
 		if (empty($time)) {
 			return null;
 		}
 		$differ = time() - $time;
+		if ($maxSecond > 0 && $differ > $maxSecond) {
+		    return static::format($time, $maxFormat);
+        }
 		if ($differ < 1) {
 			$differ = 1;
 		}
