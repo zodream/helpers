@@ -661,4 +661,55 @@ class Arr {
             current($args)
         ];
     }
+
+    /**
+     * 转换成真实的类型
+     * @param array $data
+     * @param array $maps
+     * @return array
+     */
+    public static function toRealArr(array $data, array $maps) {
+	    foreach ($data as $key => $item) {
+	        if (!isset($maps[$key])) {
+	            continue;
+            }
+            if (in_array($maps[$key], ['int', 'integer'])) {
+	            $data[$key] = intval($data[$key]);
+	            continue;
+            }
+            if ($maps[$key] == 'float') {
+                $data[$key] = floatval($data[$key]);
+                continue;
+            }
+            if ($maps[$key] == 'double') {
+                $data[$key] = doubleval($data[$key]);
+                continue;
+            }
+            if (in_array($maps[$key], ['bool', 'boolean'])) {
+                $data[$key] = $data[$key] > 0;
+                continue;
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * 获取真实的类型
+     * @param string $class
+     * @return bool|array
+     * @throws \Exception
+     */
+    public static function getRealType($class) {
+        $callback = function () use ($class) {
+            $instance = new \ReflectionClass($class);
+            $doc = $instance->getDocComment();
+            unset($instance);
+            preg_match_all('/\@property\s+([a-z]+)\s+\$([a-z\d_]+)/i', $doc, $matches, PREG_SET_ORDER);
+            return array_column($matches, 1, 2);
+        };
+        if (app()->isDebug()) {
+            return $callback();
+        }
+        return cache()->getOrSet('class_doc_type:'.$class, $callback, 86400);
+    }
 }

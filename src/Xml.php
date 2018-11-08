@@ -63,6 +63,11 @@ class Xml {
             ];
         }
         foreach ($data as $key => &$item) {
+            if (is_null($item)) {
+                // 去掉 null 的值
+                unset($item, $data[$key]);
+                continue;
+            }
             if (strpos($key, '@') === 0) {
                 continue;
             }
