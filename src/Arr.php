@@ -6,9 +6,58 @@ namespace Zodream\Helpers;
 * 
 * @author Jason
 */
+use Zodream\Infrastructure\Interfaces\ArrayAble;
+use Zodream\Infrastructure\Interfaces\JsonAble;
 use Zodream\Infrastructure\Support\Collection;
+use JsonSerializable;
+use Traversable;
 
 class Arr {
+
+    /**
+     * 深度格式化成多维数组
+     * @param array $data
+     * @return array
+     */
+    public static function format(array $data) {
+        return array_map(function ($item) {
+            $args = static::toArrOrNone($item);
+            if (false !== $args) {
+                return $args;
+            }
+            return $item;
+        }, $data);
+    }
+
+    protected static function toArrOrNone($item) {
+        if (is_array($item)) {
+            return static::format($item);
+        }
+        if ($item instanceof Collection) {
+            return $item->all();
+        }
+        if ($item instanceof ArrayAble) {
+            return $item->toArray();
+        }
+        if ($item instanceof JsonAble) {
+            return json_decode($item->toJson(), true);
+        }
+        if ($item instanceof JsonSerializable) {
+            return $item->jsonSerialize();
+        }
+        if ($item instanceof Traversable) {
+            return iterator_to_array($item);
+        }
+        return false;
+    }
+
+    public static function toArray($data) {
+        $args = static::toArrOrNone($data);
+        if (false !== $args) {
+            return $args;
+        }
+        return (array) $data;
+    }
 	
 	/**
 	 * 寻找第一个符合的
