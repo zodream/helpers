@@ -7,24 +7,24 @@ namespace Zodream\Helpers;
  */
 class Tree {
 
-	public function get_tree_child($data, $fid) {
-		$result = array();
-		$fids   = array($fid);
+	public static function getTreeChild($data, $parent_id, $key = 'parent_id') {
+		$result = [];
+		$args   = [$parent_id];
 		do {
-			$cids = array();
+			$kids = [];
 			$flag = false;
-			foreach ($fids as $fid) {
+			foreach ($args as $fid) {
 				for ($i = count($data) - 1; $i >=0 ; $i --) {
 					$node = $data[$i];
-					if ($node['fid'] == $fid) {
+					if ($node[$key] == $fid) {
 						array_splice($data, $i , 1);
 						$result[] = $node['id'];
-						$cids[]   = $node['id'];
+						$kids[]   = $node['id'];
 						$flag     = true;
 					}
 				}
 			}
-			$fids = $cids;
+			$args = $kids;
 		} while($flag === true);
 		return $result;
 	}
