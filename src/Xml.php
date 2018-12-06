@@ -51,7 +51,10 @@ class Xml {
      * @return array|integer
      */
     protected static function toSpecialArray($data) {
-        if (is_integer($data)) {
+        if (is_integer($data)
+            || is_bool($data)
+            || is_float($data)
+            || is_double($data)) {
             return $data;
         }
         if (is_object($data)) {
