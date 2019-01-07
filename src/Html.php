@@ -11,36 +11,34 @@ class Html {
     /**
      * 压缩html，
      * @param string $arg
-     * @param bool $all 如果包含js请用false
+     * @param bool $hasJs 如果包含js请用false
      * @return string
      */
-    public static function compress($arg, $all = true) {
-        if (!$all) {
-            return preg_replace(
-                '/>\s+</',
-                '><',
-                preg_replace(
-                    "/>\s+\r\n/",
-                    '>', $arg));
-        }
-        return ltrim(rtrim(preg_replace(
-            array('/> *([^ ]*) *</',
-                '//',
-                '#/\*[^*]*\*/#',
-                "/\r\n/",
-                "/\n/",
-                "/\t/",
-                '/>[ ]+</'
-            ),
-            array(
-                '>\\1<',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '><'
-            ), $arg)));
+    public static function compress($arg, $hasJs = true) {
+        $search = $hasJs ? [
+            '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
+            '/[^\S ]+\</s',     // strip whitespaces before tags, except space
+            '/(\s)+/s',         // shorten multiple whitespace sequences
+            '/<!--(.|\s)*?-->/' // Remove HTML comments
+        ] : [
+            '/> *([^ ]*) *</',
+            '//',
+            '#/\*[^*]*\*/#',
+            "/\r\n/",
+            "/\n/",
+            "/\t/",
+            '/>[ ]+</'
+        ];
+        $replace = $hasJs ? ['>', '<', '\\1', ''] : [
+            '>\\1<',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '><'
+        ];
+        return trim(preg_replace($search, $replace, $arg));
     }
 
     /**
@@ -54,7 +52,7 @@ class Html {
 
     public static function shortString($content, $length = 100) {
         $content = preg_replace('/(\<.+?\>)|(\&nbsp;)+/', '', htmlspecialchars_decode($content));
-        return StringExpand::subString($content, 0, $length);
+        return Str::substr($content, 0, $length);
     }
     
     /**
