@@ -67,7 +67,6 @@ class PinYin {
      * @return string 拼音
      */
     private static function _toPinYin($word) {
-        var_dump($word);
         if ($word > 0 && $word < 160 ) {
             return chr($word);
         }
