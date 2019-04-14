@@ -7,7 +7,15 @@ namespace Zodream\Helpers;
  */
 class Tree {
 
-	public static function getTreeChild($data, $parent_id, $key = 'parent_id') {
+    /**
+     * 获取子孙id
+     * @param $data
+     * @param $parent_id
+     * @param string $key
+     * @param string $id_key
+     * @return array
+     */
+	public static function getTreeChild($data, $parent_id, $key = 'parent_id', $id_key = 'id') {
 		$result = [];
 		$args   = [$parent_id];
 		do {
@@ -18,8 +26,8 @@ class Tree {
 					$node = $data[$i];
 					if ($node[$key] == $fid) {
 						array_splice($data, $i , 1);
-						$result[] = $node['id'];
-						$kids[]   = $node['id'];
+						$result[] = $node[$id_key];
+						$kids[]   = $node[$id_key];
 						$flag     = true;
 					}
 				}
@@ -28,31 +36,34 @@ class Tree {
 		} while($flag === true);
 		return $result;
 	}
-	
-	public function get_tree_parent($data, $id) {
-		$result = array();
-		$obj    = array();
+
+    /**
+     * 获取父级id
+     * @param $data
+     * @param $id
+     * @param string $key
+     * @param string $id_key
+     * @return array
+     */
+	public static function getTreeParent($data, $id, $key = 'parent_id', $id_key = 'id') {
+		$result = [];
+		$obj    = [];
 		foreach ($data as $node) {
-			$obj[$node['id']] = $node;
+			$obj[$node[$id_key]] = $node[$key];
 		}
-	
-		$value = isset($obj[$id]) ? $obj[$id] : null;
-		while ($value) {
-			$id = null;
-			foreach ($data as $node) {
-				if ($node['id'] == $value['fid']) {
-					$id       = $node['id'];
-					$result[] = $node['id'];
-					break;
-				}
-			}
-			if ($id === null) {
-				$result[] = $value['fid'];
-			}
-			$value = isset($obj[$id]) ? $obj[$id] : null;
+		while ($id) {
+			if (isset($obj[$id])) {
+			    break;
+            }
+            if (in_array($obj[$id], $result)) {
+			    // 数组有问题，陷入死循环，提前退出
+			    break;
+            }
+            $result[] = $obj[$id];
+            $id = $obj[$id];
 		}
 		unset($obj);
-		return $result;
+		return array_reverse($result);
 	}
 	
 	public function get_tree_ul($data, $fid) {
