@@ -52,7 +52,7 @@ class Tree {
 			$obj[$node[$id_key]] = $node[$key];
 		}
 		while ($id) {
-			if (isset($obj[$id])) {
+			if (!isset($obj[$id]) || $obj[$id] <= 0) {
 			    break;
             }
             if (in_array($obj[$id], $result)) {
