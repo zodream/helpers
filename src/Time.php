@@ -77,10 +77,19 @@ class Time {
 	}
 
     /**
-     * GET NOW WITH microtime
+     * 获取当前时间精确到微秒 以秒为单位
      * @return float
      */
 	public static function millisecond() {
         return microtime(true);
+    }
+
+    /**
+     * 获取过去的时间，以毫秒为单位
+     * @param float $start 以秒为单位 millisecond() 获取到的值
+     * @return float
+     */
+    public static function elapsedTime($start) {
+        return round((self::millisecond() - $start) * 1000, 2);
     }
 }
