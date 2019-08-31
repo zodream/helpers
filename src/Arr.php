@@ -6,9 +6,6 @@ namespace Zodream\Helpers;
 * 
 * @author Jason
 */
-use Zodream\Infrastructure\Interfaces\ArrayAble;
-use Zodream\Infrastructure\Interfaces\JsonAble;
-use Zodream\Infrastructure\Support\Collection;
 use JsonSerializable;
 use Traversable;
 
@@ -33,14 +30,16 @@ class Arr {
         if (is_array($item)) {
             return static::format($item);
         }
-        if ($item instanceof Collection) {
-            return $item->all();
-        }
-        if ($item instanceof ArrayAble) {
-            return $item->toArray();
-        }
-        if ($item instanceof JsonAble) {
-            return json_decode($item->toJson(), true);
+        if (is_object($item)) {
+            if (method_exists($item, 'toArray')) {
+                return $item->toArray();
+            }
+            if (method_exists($item, 'all')) {
+                return $item->all();
+            }
+            if (method_exists($item, 'toJson')) {
+                return json_decode($item->toJson(), true);
+            }
         }
         if ($item instanceof JsonSerializable) {
             return $item->jsonSerialize();
