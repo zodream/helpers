@@ -628,6 +628,9 @@ class Arr {
 	 */
 	public static function merge2D(array $arr) {
 		$args = func_get_args();
+		if (func_num_args() < 1) {
+		    return [];
+        }
 		$results = call_user_func_array('array_merge', $args);
 		foreach ($results as $key => $value) {
 			$temps = array();
