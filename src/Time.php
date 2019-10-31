@@ -44,6 +44,7 @@ class Time {
      * @param int $maxSecond
      * @param string $maxFormat
      * @return int|string
+     * @throws \Exception
      */
 	public static function isTimeAgo($time, $maxSecond = 0, $maxFormat = 'Y-m-d'){
 		if (empty($time)) {
@@ -92,4 +93,76 @@ class Time {
     public static function elapsedTime($start) {
         return round((self::millisecond() - $start) * 1000, 2);
     }
+
+    /**
+     * 根据起止日期生成连续日期
+     * @param string $start
+     * @param string $end
+     * @param string $format
+     * @return array
+     */
+    public static function rangeDate($start, $end, $format = 'Y-m-d') {
+        $day = 86400;
+        $start = strtotime($start);
+        $end = strtotime($end) + $day;
+        $days = [];
+        for (; $start < $end; $start += $day) {
+            $days[] = static::format($start, $format);
+        }
+        return $days;
+    }
+
+    /**
+     * 获取月份的开始结束日期
+     * @param integer $time
+     * @param string $format
+     * @return array
+     */
+    public static function month($time, $format = 'Y-m-d') {
+        $start_at = date('Y-m-01', $time);
+        $end_at = date('Y-m-t', $time);
+        if ($format === 'Y-m-d') {
+            return [$start_at, $end_at];
+        }
+        if ($format === 'Y-m-d H:i:s') {
+            return [$start_at.' 00:00:00', $end_at.' 23:59:59'];
+        }
+        $start_at = strtotime($start_at.' 00:00:00');
+        $end_at = strtotime($end_at.' 23:59:59');
+        if (!is_string($format)) {
+            return [$start_at, $end_at];
+        }
+        return [static::format($start_at, $format), static::format($end_at, $format)];
+    }
+
+    /**
+     * 获取周的起止日期
+     * @param integer $now
+     * @param string $format
+     * @return array
+     */
+    public static function week($now, $format = 'Y-m-d') {
+        $time = ('1' == date('w', $now)) ? strtotime('Monday', $now)
+            : strtotime('last Monday', $now);
+        $end = strtotime('Sunday', $now) + 86399;
+        if (!is_string($format)) {
+            return [$time, $end];
+        }
+        return [static::format($time, $format), static::format($end, $format)];
+    }
+
+    /**
+     * 转化为星期几或周几
+     * @param integer|string $time
+     * @param string $prefix
+     * @return string
+     */
+    public static function weekFormat($time, $prefix = '星期') {
+        if (!is_integer($time)) {
+            $time = strtotime($time);
+        }
+        $maps = ['日', '一', '二', '三', '四', '五', '六'];
+        return $prefix.$maps[date('w', $time)];
+    }
+
 }
