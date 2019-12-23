@@ -165,4 +165,17 @@ class Time {
         return $prefix.$maps[date('w', $time)];
     }
 
+    /**
+     * 格式化时间
+     * @param $time
+     * @return string
+     */
+    public static function hoursFormat($time) {
+        return sprintf('%s:%s:%s',
+            str_pad(floor($time / 3600), 2, '0', STR_PAD_LEFT),
+            str_pad(floor($time % 3600 / 60), 2, '0', STR_PAD_LEFT),
+            str_pad(floor($time % 60), 2, '0', STR_PAD_LEFT)
+        );
+    }
+
 }
