@@ -543,7 +543,7 @@ class Arr {
      * @return bool
      */
 	public static function isAssoc($args) {
-		return array_keys($args) !== range(0, count($args) - 1);
+		return is_array($args) && array_keys($args) !== range(0, count($args) - 1);
 	}
 
     /**
