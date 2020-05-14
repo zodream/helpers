@@ -9,7 +9,7 @@ namespace Zodream\Helpers;
 class Html {
 
     /**
-     * 压缩html，
+     * 压缩html，请事先对一些不要压缩的标签进行替换
      * @param string $arg
      * @param bool $hasJs 如果包含js请用false
      * @return string
