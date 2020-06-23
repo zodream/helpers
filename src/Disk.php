@@ -13,7 +13,7 @@ class Disk {
      * @return string
      */
     public static function size($size) {
-        $sizes = array(" Bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB");
+        $sizes = array(' Bytes', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB');
         if ($size == 0) {
             return('n/a');
         }
@@ -30,7 +30,7 @@ class Disk {
         $a1 = explode('/', ltrim($a1, '/'));
         $b1 = explode('/', ltrim($b1, '/'));
         for($i = 0; isset($b1[$i], $a1[$i]); $i++){
-            if($a1[$i] == $b1[$i]) $a1[$i] = "..";
+            if($a1[$i] == $b1[$i]) $a1[$i] = '..';
             else break;
         }
         return implode('/', $a1);
