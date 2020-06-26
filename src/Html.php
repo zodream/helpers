@@ -104,6 +104,28 @@ class Html {
         return str_replace('\\', '/', $url);
     }
 
+    /**
+     * 编码html
+     * @param string $html
+     * @param int $length 大于0则需要截取
+     * @return string
+     */
+    public static function text($html, $length = 0) {
+        if (empty($html)) {
+            return $html;
+        }
+        $text = htmlspecialchars($html);
+        if ($length > 0) {
+            return Str::substr($text, 0, $length, true);
+        }
+        return $text;
+    }
+
+    /**
+     * 转换html为文本
+     * @param string $str
+     * @return string
+     */
     public static function toText($str) {
         $str = preg_replace("/<style .*?<\\/style>/is", "", $str);
         $str = preg_replace("/<script .*?<\\/script>/is", "", $str);
