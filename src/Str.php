@@ -16,6 +16,38 @@ class Str {
 	public static function value($value) {
 		return is_callable($value) ? call_user_func($value) : $value;
 	}
+
+    /**
+     * 字符串转方法执行
+     * @param $str
+     * @param array $params
+     * @param mixed $default
+     * @return mixed|null
+     */
+	public static function call($str, array $params = [], $default = null) {
+	    if (empty($str)) {
+	        return $default;
+        }
+	    if (is_callable($str)) {
+	        return call_user_func_array($str, $params);
+        }
+	    if (!is_string($str)) {
+            return $default;
+        }
+	    if (strpos($str, '@') === false) {
+            return $default;
+        }
+	    list($cls, $method) = explode('@', $str, 2);
+	    if (!class_exists($cls)) {
+	        return $default;
+        }
+	    $instance = new $cls();
+	    if (!method_exists($instance, $method)) {
+	        return $default;
+        }
+	    return $instance->$method(...$params);
+    }
+
     /**
      * Determine if a given string contains a given substring.
      *
