@@ -91,12 +91,12 @@ class PinYin {
         if (!preg_match('/^[\x7f-\xff]/', $str)) {
             return strtoupper($str[0]);
         }
-        $firstChar=ord($str{0});
+        $firstChar=ord($str[0]);
         if($firstChar >= ord('A') && $firstChar <= ord('z')) {
-            return strtoupper($str{0});
+            return strtoupper($str[0]);
         }
         $a = $str;
-        $val = ord($a{0}) * 256 + ord($a{1}) - 65536;
+        $val = ord($a[0]) * 256 + ord($a[1]) - 65536;
         if ($val >= -20319 && $val <= -20284)  {
             return 'A';
         }
