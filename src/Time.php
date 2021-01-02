@@ -1,5 +1,8 @@
-<?php 
+<?php
+declare(strict_types=1);
 namespace Zodream\Helpers;
+
+use Exception;
 
 /**
 * time 的扩展
@@ -15,7 +18,8 @@ class Time {
 	 * @param string $format
 	 * @return string
 	 */
-	public static function format($time = null, $format = 'Y-m-d H:i:s') {
+	public static function format($time = null, $format = 'Y-m-d H:i:s'): string
+    {
 		if (!empty($time) && !is_numeric($time)) {
 			$format = $time;
 			$time = time();
@@ -31,7 +35,8 @@ class Time {
      * @param null $time
      * @return string
      */
-	public static function timestamp($time = null) {
+	public static function timestamp($time = null): string
+    {
         if (is_null($time)) {
             $time = time();
         }
@@ -43,12 +48,13 @@ class Time {
      * @param $time
      * @param int $maxSecond
      * @param string $maxFormat
-     * @return int|string
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
-	public static function isTimeAgo($time, $maxSecond = 0, $maxFormat = 'Y-m-d'){
+	public static function isTimeAgo(int $time, int $maxSecond = 0, string $maxFormat = 'Y-m-d'): string
+    {
 		if (empty($time)) {
-			return null;
+			return '';
 		}
 		$differ = time() - $time;
 		if ($maxSecond > 0 && $differ > $maxSecond) {
@@ -81,7 +87,7 @@ class Time {
      * 获取当前时间精确到微秒 以秒为单位
      * @return float
      */
-	public static function millisecond() {
+	public static function millisecond(): float {
         return microtime(true);
     }
 
@@ -90,7 +96,8 @@ class Time {
      * @param float $start 以秒为单位 millisecond() 获取到的值
      * @return float
      */
-    public static function elapsedTime($start) {
+    public static function elapsedTime(float $start): float
+    {
         return round((self::millisecond() - $start) * 1000, 2);
     }
 
@@ -101,7 +108,8 @@ class Time {
      * @param string $format
      * @return array
      */
-    public static function rangeDate($start, $end, $format = 'Y-m-d') {
+    public static function rangeDate(string $start, string $end, string $format = 'Y-m-d'): array
+    {
         $day = 86400;
         $start = strtotime($start);
         $end = strtotime($end) + $day;
@@ -118,7 +126,8 @@ class Time {
      * @param string $format
      * @return array
      */
-    public static function month($time, $format = 'Y-m-d') {
+    public static function month(int $time, string $format = 'Y-m-d'): array
+    {
         $start_at = date('Y-m-01', $time);
         $end_at = date('Y-m-t', $time);
         if ($format === 'Y-m-d') {
@@ -141,7 +150,8 @@ class Time {
      * @param string $format
      * @return array
      */
-    public static function week($now, $format = 'Y-m-d') {
+    public static function week(int $now, string $format = 'Y-m-d'): array
+    {
         $time = ('1' == date('w', $now)) ? strtotime('Monday', $now)
             : strtotime('last Monday', $now);
         $end = strtotime('Sunday', $now) + 86399;
@@ -157,7 +167,7 @@ class Time {
      * @param string $prefix
      * @return string
      */
-    public static function weekFormat($time, $prefix = '星期') {
+    public static function weekFormat(int|string $time, string $prefix = '星期'): string {
         if (!is_integer($time)) {
             $time = strtotime($time);
         }
@@ -167,15 +177,31 @@ class Time {
 
     /**
      * 格式化时间
-     * @param $time
+     * @param int $time
      * @return string
      */
-    public static function hoursFormat($time) {
+    public static function hoursFormat(int $time): string {
         return sprintf('%s:%s:%s',
             str_pad(floor($time / 3600), 2, '0', STR_PAD_LEFT),
             str_pad(floor($time % 3600 / 60), 2, '0', STR_PAD_LEFT),
             str_pad(floor($time % 60), 2, '0', STR_PAD_LEFT)
         );
+    }
+
+    /**
+     * 格式化时间间隔
+     * @param float $seconds
+     * @return string
+     */
+    public static function formatDuration(float $seconds): string {
+        if ($seconds < 0.001) {
+            return round($seconds * 1000000) . 'μs';
+        } elseif ($seconds < 0.1) {
+            return round($seconds * 1000, 2) . 'ms';
+        } elseif ($seconds < 1) {
+            return round($seconds * 1000) . 'ms';
+        }
+        return round($seconds, 2) . 's';
     }
 
 }
