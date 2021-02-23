@@ -1,4 +1,5 @@
-<?php 
+<?php
+declare(strict_types=1);
 namespace Zodream\Helpers;
 
 /**
@@ -34,7 +35,7 @@ class Str {
 	    if (!is_string($str)) {
             return $default;
         }
-	    if (strpos($str, '@') === false) {
+	    if (!str_contains($str, '@')) {
             return $default;
         }
 	    list($cls, $method) = explode('@', $str, 2);
@@ -352,11 +353,11 @@ class Str {
 	 * @param string $replace
 	 * @return string
 	 */
-	public static function firstReplace($arg, $search, $replace = null) {
+	public static function firstReplace(string $arg, string $search, array|string $replace = ''): string {
 		return preg_replace('/^'.$search.'/', $replace, $arg, 1);
 	}
 
-	public static function lastReplace($arg, $search, $replace = null) {
+	public static function lastReplace(string $arg, string $search, array|string $replace = ''): string {
 		return preg_replace('/'.$search.'$/', $replace, $arg, 1);
 	}
 
