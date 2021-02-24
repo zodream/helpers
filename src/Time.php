@@ -12,13 +12,13 @@ use Exception;
 
 class Time {
 
-	/**
-	 * 将时间转换成字符串格式
-	 * @param null $time
-	 * @param string $format
-	 * @return string
-	 */
-	public static function format($time = null, $format = 'Y-m-d H:i:s'): string
+    /**
+     * 将时间转换成字符串格式
+     * @param int|string $time
+     * @param string $format
+     * @return string
+     */
+	public static function format(int|string $time = '', $format = 'Y-m-d H:i:s'): string
     {
 		if (!empty($time) && !is_numeric($time)) {
 			$format = $time;
@@ -27,7 +27,7 @@ class Time {
 		if (is_null($time)) {
 			$time = time();
 		}
-		return date($format, $time);
+		return date($format, is_string($time) ? intval($time) : $time);
 	}
 
     /**
