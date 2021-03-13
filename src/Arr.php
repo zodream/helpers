@@ -529,20 +529,14 @@ class Arr {
 	 * @return array|string
 	 */
 	public static function getChildByArray(array $keys, array $values, $default = null) {
-		switch (count($keys)) {
-			case 0:
-				return $values;
-			case 1:
-				return array_key_exists($keys[0], $values) ? $values[$keys[0]] : $default;
-			case 2:
-				return isset($values[$keys[0]][$keys[1]]) ? $values[$keys[0]][$keys[1]] : $default;
-			case 3:
-				return isset($values[$keys[0]][$keys[1]][$keys[2]]) ? $values[$keys[0]][$keys[1]][$keys[2]] : $default;
-			case 4:
-				return isset($values[$keys[0]][$keys[1]][$keys[2]][$keys[3]]) ? $values[$keys[0]][$keys[1]][$keys[2]][$keys[3]] : $default;
-			default:
-				return isset($values[$keys[0]]) ? self::getChildByArray(array_slice($keys, 1), $values[$keys[0]], $default) : $default;
-		}
+        return match (count($keys)) {
+            0 => $values,
+            1 => array_key_exists($keys[0], $values) ? $values[$keys[0]] : $default,
+            2 => isset($values[$keys[0]][$keys[1]]) ? $values[$keys[0]][$keys[1]] : $default,
+            3 => isset($values[$keys[0]][$keys[1]][$keys[2]]) ? $values[$keys[0]][$keys[1]][$keys[2]] : $default,
+            4 => isset($values[$keys[0]][$keys[1]][$keys[2]][$keys[3]]) ? $values[$keys[0]][$keys[1]][$keys[2]][$keys[3]] : $default,
+            default => isset($values[$keys[0]]) ? self::getChildByArray(array_slice($keys, 1), $values[$keys[0]], $default) : $default,
+        };
 	}
 
 	/**
