@@ -699,11 +699,22 @@ class Arr {
         }
 		$results = call_user_func_array('array_merge', $args);
 		foreach ($results as $key => $value) {
-			$temps = array();
+			$temps = [];
+			$isArr = true;
 			foreach ($args as $val) {
-				$temps[] = isset($val[$key]) ? (array)$val[$key] : array();
+			    if (!array_key_exists($key, $val)) {
+			        continue;
+                }
+			    if (!is_array($val[$key])) {
+			        $isArr = false;
+                }
+				$temps[] = $val[$key];
 			}
-			$results[$key] = call_user_func_array('array_merge', $temps);
+			if (empty($temps)) {
+			    continue;
+            }
+			$results[$key] = !$isArr ? end($temps) :
+                call_user_func_array('array_merge', $temps);
 		}
 		return $results;
 	}
