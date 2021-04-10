@@ -608,7 +608,7 @@ class Arr {
      * @param array $args
      * @return bool
      */
-	public static function isAssoc($args) {
+	public static function isAssoc($args): bool {
 		return is_array($args) && array_keys($args) !== range(0, count($args) - 1);
 	}
 
