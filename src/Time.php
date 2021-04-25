@@ -84,6 +84,39 @@ class Time {
 	}
 
     /**
+     * 格式化时间，同步其他端显示
+     * @param int $time
+     * @return string
+     */
+	public static function ago(int $time): string {
+        if (empty($time)) {
+            return '--';
+        }
+        $now = time();
+        $diff = floor($now - $time);
+        if ($diff < 1) {
+            return '刚刚';
+        }
+        if ($diff < 60) {
+            return $diff. '秒前';
+        }
+        if ($diff < 3600) {
+            return floor($diff / 60). '分钟前';
+        }
+        if ($diff < 86400) {
+            return floor($diff / 3600). '小时前';
+        }
+        if ($diff < 2592000) {
+            return floor($diff / 86400). '天前';
+        }
+        $year = date('Y', $time);
+        if ($year === date('Y', $now)) {
+            return sprintf('%02d月%02d', date('m', $time), date('d', $time));
+        }
+        return sprintf('%d年%02d月', $year, date('m', $time));
+    }
+
+    /**
      * 获取当前时间精确到微秒 以秒为单位
      * @return float
      */

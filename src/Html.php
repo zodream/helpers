@@ -14,7 +14,7 @@ class Html {
      * @param bool $hasJs 如果包含js请用false
      * @return string
      */
-    public static function compress($arg, $hasJs = true) {
+    public static function compress(string $arg, bool $hasJs = true) {
         $search = $hasJs ? [
             '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
             '/[^\S ]+\</s',     // strip whitespaces before tags, except space
