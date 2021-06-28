@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Zodream\Helpers\Security;
 /**
  * Created by PhpStorm.
@@ -7,9 +8,9 @@ namespace Zodream\Helpers\Security;
  * Time: 12:14
  */
 class Aes extends BaseSecurity {
-    protected $key;
+    protected string $key = '';
 
-    public function setKey($key) {
+    public function setKey(string $key) {
         $this->key = md5($key);
         return $this;
     }
@@ -18,7 +19,7 @@ class Aes extends BaseSecurity {
         return $this->key;
     }
 
-    public function encrypt($input) {
+    public function encrypt($input): string {
         $size = mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB);
         $input = $this->pkcs5Pad($input, $size);
         $td = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_ECB, '');
@@ -30,7 +31,7 @@ class Aes extends BaseSecurity {
         return base64_encode($data);
     }
 
-    public function decrypt($data) {
+    public function decrypt(string $data): string {
         $decrypted= mcrypt_decrypt(
             MCRYPT_RIJNDAEL_128,
             $this->key,

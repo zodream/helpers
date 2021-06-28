@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Zodream\Helpers\Security;
 /**
  * Created by PhpStorm.
@@ -7,28 +8,28 @@ namespace Zodream\Helpers\Security;
  * Time: 11:55
  */
 class Des extends BaseSecurity {
-    protected $key;
+    protected string $key = '';
 
     /**
      * @var string MCRYPT_RIJNDAEL_128、MCRYPT_RIJNDAEL_192、MCRYPT_RIJNDAEL_256
      */
-    protected $size = MCRYPT_RIJNDAEL_256;
+    protected string $size = MCRYPT_RIJNDAEL_256;
 
-    public function setKey($key) {
+    public function setKey(string $key) {
         $this->key = md5($key);
         return $this;
     }
 
-    public function getKey() {
+    public function getKey(): string {
         return $this->key;
     }
 
-    public function setSize($size) {
+    public function setSize(string $size) {
         $this->size = $size;
         return $this;
     }
 
-    public function getSize() {
+    public function getSize(): string {
         return $this->size;
     }
 
@@ -36,7 +37,7 @@ class Des extends BaseSecurity {
      * @param $data
      * @return string
      */
-    public function encrypt($data) {
+    public function encrypt($data): string {
         return base64_encode(
             mcrypt_encrypt(
                 $this->size,
@@ -48,7 +49,7 @@ class Des extends BaseSecurity {
         );
     }
 
-    public function decrypt($data) {
+    public function decrypt(string $data): string {
         $arg = mcrypt_decrypt(
             $this->size,
             $this->key,
@@ -65,7 +66,7 @@ class Des extends BaseSecurity {
         return $arg;
     }
 
-    public function createIv() {
+    public function createIv(): string {
         $iv_size = mcrypt_get_iv_size($this->size, MCRYPT_MODE_ECB);
         return mcrypt_create_iv($iv_size, MCRYPT_RAND);
     }

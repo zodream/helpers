@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Zodream\Helpers\Security;
 /**
  * Created by PhpStorm.
@@ -7,33 +8,33 @@ namespace Zodream\Helpers\Security;
  * Time: 14:12
  */
 class AuthCode extends BaseSecurity {
-    protected $key;
+    protected string $key = '';
     
-    protected $expiry = 0;
+    protected int $expiry = 0;
 
-    public function setKey($key) {
+    public function setKey(string $key) {
         $this->key = $key;
         return $this;
     }
 
-    public function getKey() {
+    public function getKey(): string {
         return $this->key;
     }
 
-    public function setExpiry($key) {
+    public function setExpiry(int $key) {
         $this->expiry = $key;
         return $this;
     }
 
-    public function geExpiry() {
-        return $this->key;
+    public function geExpiry(): int {
+        return $this->expiry;
     }
 
-    public function encrypt($data) {
+    public function encrypt($data): string {
         return $this->make($data, false);
     }
 
-    public function decrypt($data) {
+    public function decrypt(string $data): string {
         return $this->make($data, true);
     }
 
@@ -44,7 +45,7 @@ class AuthCode extends BaseSecurity {
     * $key： 密匙
     * $expiry：密文有效期
     * */
-    protected function make($string, $isDecrypt) {
+    protected function make(string $string, bool $isDecrypt): string {
         // 动态密匙长度，相同的明文会生成不同密文就是依靠动态密匙
         $keyLength = 4;
 

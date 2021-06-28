@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Zodream\Helpers\Security;
 
 /**
@@ -18,29 +19,29 @@ use UnexpectedValueException;
 
 class Jwt extends BaseSecurity {
     
-    protected $algo = 'HS256';
+    protected string $algo = 'HS256';
     
-    protected $key;
+    protected string $key;
 
-    public function setAlgo($algo) {
+    public function setAlgo(string $algo) {
         $this->algo = strtoupper($algo);
         return $this;
     }
 
-    public function getAlgo() {
+    public function getAlgo(): string {
         return $this->algo;
     }
 
-    public function setKey($key) {
+    public function setKey(string $key) {
         $this->key = $key;
         return $this;
     }
 
-    public function getKey() {
+    public function getKey(): string {
         return $this->key;
     }
     
-    public function encrypt($payload) {
+    public function encrypt($payload): string {
         $header = array('typ' => 'JWT', 'alg' => $this->algo); 
         $segments = array(
             $this->urlsafeB64Encode(json_encode($header)), 
@@ -52,7 +53,7 @@ class Jwt extends BaseSecurity {
         return implode('.', $segments);
     }
 
-    public function decrypt($jwt) {
+    public function decrypt(string $jwt) {
         $tks = explode('.', $jwt);
         if (count($tks) != 3) {
             throw new Exception(

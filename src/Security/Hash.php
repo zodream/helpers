@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Zodream\Helpers\Security;
 /**
  * Created by PhpStorm.
@@ -16,7 +17,7 @@ class Hash {
      * @param array $options
      * @return bool|string
      */
-    public static function make($value, $options = array()) {
+    public static function make(string $value, array $options = array()): string {
         return password_hash($value, PASSWORD_BCRYPT, ['cost' => static::cost($options)]);
     }
 
@@ -26,7 +27,7 @@ class Hash {
      * @param string $hash 已经hash过的值
      * @return bool
      */
-    public static function verify($value, $hash) {
+    public static function verify(string $value, string $hash): bool {
         return password_verify($value, $hash);
     }
 
@@ -60,6 +61,6 @@ class Hash {
      * @return int
      */
     protected static function cost(array $options = []) {
-        return isset($options['rounds']) ? $options['rounds'] : static::$rounds;
+        return $options['rounds'] ?? static::$rounds;
     }
 }

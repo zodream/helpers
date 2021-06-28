@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Zodream\Helpers\Security;
 /**
  * Created by PhpStorm.
@@ -8,15 +9,19 @@ namespace Zodream\Helpers\Security;
  */
 abstract class BaseSecurity {
 
-    public function pkcs5Pad($text, $blockSize) {
+    public function pkcs5Pad(string $text, int $blockSize): string {
         $pad = $blockSize - (strlen($text) % $blockSize);
         return $text . str_repeat(chr($pad), $pad);
     }
 
-    public function pkcs5UnPad($text) {
-        $pad = ord($text{strlen($text)-1});
-        if ($pad > strlen($text)) return false;
-        if (strspn($text, chr($pad), strlen($text) - $pad) != $pad) return false;
+    public function pkcs5UnPad(string $text): string {
+        $pad = ord(substr($text, strlen($text)-1, 1));
+        if ($pad > strlen($text)) {
+            return '';
+        }
+        if (strspn($text, chr($pad), strlen($text) - $pad) != $pad) {
+            return '';
+        }
         return substr($text, 0, -1 * $pad);
     }
 
@@ -33,7 +38,7 @@ abstract class BaseSecurity {
      * @param integer $blockSize the block size of the cipher in bytes
      * @return string the padded plaintext
      */
-    public function pkcs7Pad($text, $blockSize) {
+    public function pkcs7Pad(string $text, int $blockSize): string {
         $padSize = $blockSize - (strlen($text) % $blockSize);
         return $text . str_repeat(chr($padSize), $padSize);
     }
@@ -58,7 +63,7 @@ abstract class BaseSecurity {
      * @return string the unpadded plaintext
      * @throws \Exception
      */
-    public function pkcs7UnPad($padded, $blockSize) {
+    public function pkcs7UnPad(string $padded, int $blockSize): string {
         $l = strlen($padded);
         if ($l % $blockSize != 0) {
             throw new \Exception(
@@ -91,12 +96,12 @@ abstract class BaseSecurity {
      * @param string $data
      * @return string
      */
-    abstract public function encrypt($data);
+    abstract public function encrypt($data): string;
 
     /**
      * DECRYPT STRING
      * @param string $data
-     * @return string
+     * @return mixed
      */
-    abstract public function decrypt($data);
+    abstract public function decrypt(string $data);
 }
