@@ -371,7 +371,7 @@ class Str {
      * @param  string  $value
      * @return string
      */
-    public static function studly($value) {
+    public static function studly(string $value) {
         $value = ucwords(str_replace(['-', '_'], ' ', $value));
         return str_replace(' ', '', $value);
     }
@@ -382,7 +382,7 @@ class Str {
      * @param string $separator
      * @return string
      */
-    public static function unStudly($camelCaps, $separator='_') {
+    public static function unStudly(string $camelCaps, string $separator = '_') {
         return strtolower(preg_replace('/([a-z])([A-Z])/', "$1" . $separator . "$2", $camelCaps));
     }
 
@@ -391,7 +391,7 @@ class Str {
 	 * @param string $str
 	 * @return int
 	 */
-	public static function absLength($str) {
+	public static function absLength(string $str) {
 		if (empty($str)) {
 			return 0;
 		}
@@ -412,10 +412,14 @@ class Str {
 	 * @param $suffix 是否加尾缀
 	 */
 	
-	public static function substr($str, $start, $length, $suffix = false) {
-        if (mb_strlen($str, 'utf-8') <= $length) return $str;
+	public static function substr(string $str, int $start, int $length, bool $suffix = false) {
+        if (mb_strlen($str, 'utf-8') <= $length) {
+            return $str;
+        }
         $slice = mb_substr($str, $start, $length, 'utf-8');
-		if ($suffix) return $slice."…";
+		if ($suffix) {
+            return $slice."…";
+        }
 		return $slice;
 	}
 	
