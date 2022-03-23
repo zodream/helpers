@@ -14,9 +14,14 @@ class Str {
      * @param string $value
      * @return mixed
      */
-	public static function value($value) {
+	public static function value(mixed $value) {
 		return is_callable($value) ? call_user_func($value) : $value;
 	}
+
+    public static function toBool(mixed $value): bool {
+        return ((is_numeric($value) && $value > 0) || (is_bool($value) && $value)
+                || (is_string($value) && strtolower($value) === 'true')) && !empty($value);
+    }
 
     /**
      * 字符串转方法执行
@@ -25,7 +30,7 @@ class Str {
      * @param mixed $default
      * @return mixed|null
      */
-	public static function call($str, array $params = [], $default = null) {
+	public static function call(mixed $str, array $params = [], mixed $default = null): mixed {
 	    if (empty($str)) {
 	        return $default;
         }
@@ -56,7 +61,7 @@ class Str {
      * @param  string|array  $needles
      * @return bool
      */
-    public static function contains($haystack, $needles) {
+    public static function contains(string $haystack, string|array $needles): bool {
         foreach ((array)$needles as $needle) {
             if ($needle !== '' && mb_strpos($haystack, $needle) !== false) {
                 return true;
@@ -72,18 +77,18 @@ class Str {
 	 * @param string $line
 	 * @return string
 	 */
-	public static function repeat($str, $count, $line = ',') {
+	public static function repeat(string $str, int $count, string $line = ','): string {
 		return substr(str_repeat($str.$line, $count), 0, - strlen($line));
 	}
 
     /**
      * Determine if a given string matches a given pattern.
      *
-     * @param  string  $pattern
-     * @param  string  $value
+     * @param string|array $pattern
+     * @param string $value
      * @return bool
      */
-    public static function is($pattern, $value) {
+    public static function is(string|array $pattern, string $value): bool {
         $patterns = is_array($pattern) ? $pattern : (array) $pattern;
 
         if (empty($patterns)) {
@@ -119,7 +124,7 @@ class Str {
 	 * @param  int  $length
 	 * @return string
 	 */
-	public static function random($length = 16) {
+	public static function random(int $length = 16): string {
 		if (function_exists('str_random')) {
 			return str_random($length);
 		}
@@ -132,53 +137,19 @@ class Str {
 		return $string;
 	}
 
-	public static function randomInt($min, $max) {
-	    if (function_exists('random_int')) {
-	        return random_int($min, $max);
-        }
-        if (!function_exists('mcrypt_create_iv')) {
-            trigger_error(
-                'mcrypt must be loaded for random_int to work',
-                E_USER_WARNING
-            );
-            return null;
-        }
-        if (!is_int($min) || !is_int($max)) {
-            trigger_error('$min and $max must be integer values', E_USER_NOTICE);
-            $min = (int)$min;
-            $max = (int)$max;
-        }
-        if ($min > $max) {
-            trigger_error('$max can\'t be lesser than $min', E_USER_WARNING);
-            return null;
-        }
-        $range = $counter = $max - $min;
-        $bits = 1;
-        while ($counter >>= 1) {
-            ++$bits;
-        }
-        $bytes = (int)max(ceil($bits / 8), 1);
-        $bitmask = pow(2, $bits) - 1;
-        if ($bitmask >= PHP_INT_MAX) {
-            $bitmask = PHP_INT_MAX;
-        }
-        do {
-            $result = hexdec(
-                    bin2hex(
-                        mcrypt_create_iv($bytes, MCRYPT_DEV_URANDOM)
-                    )
-                ) & $bitmask;
-        } while ($result > $range);
-
-        return $result + $min;
+    /**
+     * @throws \Exception
+     */
+    public static function randomInt(int $min, int $max): int {
+        return random_int($min, $max);
     }
 
 	/**
 	 * 生成随机数字字符串
-	 * @param $length
+	 * @param int $length
 	 * @return string
 	 */
-	public static function randomNumber($length = 6) {
+	public static function randomNumber(int $length = 6): string {
 		return sprintf('%0'.$length.'d', mt_rand(0, pow(10, $length) - 1));
 	}
 
@@ -189,9 +160,9 @@ class Str {
      * @return string
      * @throws \ErrorException
      */
-	public static function randomBytes($length = 16) {
+	public static function randomBytes(int $length = 16): string {
 		if (PHP_MAJOR_VERSION >= 7 || defined('RANDOM_COMPAT_READ_BUFFER')) {
-			return random_bytes($length);
+            return random_bytes($length);
 		} elseif (function_exists('openssl_random_pseudo_bytes')) {
 			$bytes = openssl_random_pseudo_bytes($length, $strong);
 			if ($bytes === false || $strong === false) {
@@ -242,7 +213,7 @@ class Str {
 	 * @param  int  $length
 	 * @return string
 	 */
-	public static function quickRandom($length = 16) {
+	public static function quickRandom(int $length = 16): string {
 		$pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		return substr(str_shuffle(str_repeat($pool, $length)), 0, $length);
 	}
@@ -254,9 +225,9 @@ class Str {
      * @return string
      */
     public static function randomByNumber(
-        $length = 6,
-        $arg = 0,
-        $pool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        int $length = 6,
+        mixed $arg = 0,
+        string $pool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
     ) {
         $arg = intval($arg);
         $str = '';
@@ -276,19 +247,19 @@ class Str {
 	 * @param string $string
 	 * @return integer
 	 */
-	public static function byteLength($string) {
+	public static function byteLength(string $string) {
 		return mb_strlen($string, '8bit');
 	}
 
-	/**
-	 * 截取字符串为数组，补充explode函数
-	 * @param $str
-	 * @param string $link
-	 * @param int $num
-	 * @param array|string $default 不存在时使用
-	 * @return array
-	 */
-	public static function explode($str, $link = ' ', $num = 1, $default = null) {
+    /**
+     * 截取字符串为数组，补充explode函数
+     * @param string $str
+     * @param string $link
+     * @param int $num
+     * @param array|string $default 不存在时使用
+     * @return array
+     */
+	public static function explode(string $str, string $link = ' ', int $num = 1, mixed $default = null): array {
 		$args = explode($link, $str, $num);
 		if (count($args) >= $num) {
 			return $args;
@@ -322,9 +293,9 @@ class Str {
 	 * @param string|array $needles 要寻找的字符串
 	 * @return bool
 	 */
-	public static function startsWith($haystack, $needles) {
+	public static function startsWith(string $haystack, string|array $needles): bool {
 		foreach ((array) $needles as $needle) {
-			if ($needle != '' && strpos($haystack, $needle) === 0) {
+			if ($needle !== '' && str_starts_with($haystack, $needle)) {
 				return true;
 			}
 		}
@@ -333,26 +304,26 @@ class Str {
 
     /**
      * 是否以。。。结尾
-     * @param string $search
      * @param string $arg
+     * @param string|array $search
      * @return bool
      */
-	public static function endWith($arg, $search) {
+	public static function endWith(string $arg, string|array $search): bool {
         foreach ((array) $search as $needle) {
-            if ($needle != '' && strrchr($arg, $needle) === $needle) {
+            if ($needle !== '' && str_ends_with($arg, $needle)) {
                 return true;
             }
         }
         return false;
     }
 
-	/**
-	 * 首字符替换
-	 * @param string $search
-	 * @param string $arg
-	 * @param string $replace
-	 * @return string
-	 */
+    /**
+     * 首字符替换
+     * @param string $arg
+     * @param string $search
+     * @param array|string $replace
+     * @return string
+     */
 	public static function firstReplace(string $arg, string $search, array|string $replace = ''): string {
 		return preg_replace('/^'.$search.'/', $replace, $arg, 1);
 	}
@@ -361,7 +332,7 @@ class Str {
 		return preg_replace('/'.$search.'$/', $replace, $arg, 1);
 	}
 
-    public static function parseCallback($callback, $default = null) {
+    public static function parseCallback(string $callback, mixed $default = null): array {
         return static::contains($callback, '@') ? explode('@', $callback, 2) : [$callback, $default];
     }
 
@@ -371,7 +342,7 @@ class Str {
      * @param  string  $value
      * @return string
      */
-    public static function studly(string $value) {
+    public static function studly(string $value): string {
         $value = ucwords(str_replace(['-', '_'], ' ', $value));
         return str_replace(' ', '', $value);
     }
@@ -382,7 +353,7 @@ class Str {
      * @param string $separator
      * @return string
      */
-    public static function unStudly(string $camelCaps, string $separator = '_') {
+    public static function unStudly(string $camelCaps, string $separator = '_'): string {
         return strtolower(preg_replace('/([a-z])([A-Z])/', "$1" . $separator . "$2", $camelCaps));
     }
 
@@ -391,7 +362,7 @@ class Str {
 	 * @param string $str
 	 * @return int
 	 */
-	public static function absLength(string $str) {
+	public static function absLength(string $str): int {
 		if (empty($str)) {
 			return 0;
 		}
@@ -401,24 +372,23 @@ class Str {
         preg_match_all("/./u", $str, $ar);
         return count($ar[0]);
 	}
-	
-	/*
-	 * 中文截取，支持gb2312,gbk,utf-8,big5
-	 *
-	 * @param string $str 要截取的字串
-	 * @param int $start 截取起始位置
-	 * @param int $length 截取长度
-	 * @param string $charset utf-8|gb2312|gbk|big5 编码
-	 * @param $suffix 是否加尾缀
-	 */
-	
-	public static function substr(string $str, int $start, int $length, bool $suffix = false) {
+
+    /**
+     * 中文截取，支持gb2312,gbk,utf-8,big5
+     *
+     * @param string $str 要截取的字串
+     * @param int $start 截取起始位置
+     * @param int $length 截取长度
+     * @param bool $suffix 是否加尾缀
+     * @return string
+     */
+	public static function substr(string $str, int $start, int $length, bool $suffix = false): string {
         if (mb_strlen($str, 'utf-8') <= $length) {
             return $str;
         }
         $slice = mb_substr($str, $start, $length, 'utf-8');
 		if ($suffix) {
-            return $slice."…";
+            return $slice.'…';
         }
 		return $slice;
 	}
