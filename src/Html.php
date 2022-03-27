@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Zodream\Helpers;
 /**
  * Created by PhpStorm.
@@ -14,7 +15,7 @@ class Html {
      * @param bool $hasJs 如果包含js请用false
      * @return string
      */
-    public static function compress(string $arg, bool $hasJs = true) {
+    public static function compress(string $arg, bool $hasJs = true): string {
         $search = $hasJs ? [
             '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
             '/[^\S ]+\</s',     // strip whitespaces before tags, except space
@@ -46,11 +47,11 @@ class Html {
      * @param string $content
      * @return string
      */
-    public static function filterHtml($content) {
+    public static function filterHtml(string $content): string {
         return preg_replace('/<(.*?)>/', '', htmlspecialchars_decode($content));
     }
 
-    public static function shortString($content, $length = 100) {
+    public static function shortString(string $content, int $length = 100): string {
         $content = preg_replace('/(\<.+?\>)|(\&nbsp;)+/', '', htmlspecialchars_decode($content));
         return Str::substr($content, 0, $length);
     }
@@ -62,19 +63,19 @@ class Html {
      * @param string $baseUrl
      * @return string
      */
-    public static function formatUrl($srcUrl, $baseUrl) {
+    public static function formatUrl(string $srcUrl, string $baseUrl): string {
         $srcInfo = parse_url($srcUrl);
         if(isset($srcInfo['scheme'])) {
             return $srcUrl;
         }
         $baseInfo = parse_url($baseUrl);
         $url = $baseInfo['scheme'].'://'.$baseInfo['host'];
-        if(substr($srcInfo['path'], 0, 1) == '/') {
+        if(str_starts_with($srcInfo['path'], '/')) {
             $path = $srcInfo['path'];
         }else{
             $filename=  basename($baseInfo['path']);
             //兼容基础url是列表
-            if(strpos($filename,".")===false){
+            if(!str_contains($filename, ".")){
                 $path = dirname($baseInfo['path']).'/'.$filename.'/'.$srcInfo['path'];
             }else{
                 $path = dirname($baseInfo['path']).'/'.$srcInfo['path'];
@@ -106,13 +107,13 @@ class Html {
 
     /**
      * 编码html
-     * @param string $html
+     * @param string|null $html
      * @param int $length 大于0则需要截取
      * @return string
      */
-    public static function text($html, $length = 0) {
+    public static function text(?string $html, int $length = 0): string {
         if (empty($html)) {
-            return $html;
+            return '';
         }
         $text = htmlspecialchars($html);
         if ($length > 0) {
@@ -126,7 +127,7 @@ class Html {
      * @param string $str
      * @return string
      */
-    public static function toText($str) {
+    public static function toText(string $str): string {
         $str = preg_replace("/<style .*?<\\/style>/is", "", $str);
         $str = preg_replace("/<script .*?<\\/script>/is", "", $str);
         $str = preg_replace("/<br \\s*\\/>/i", ">>>>", $str);

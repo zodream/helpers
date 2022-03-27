@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Zodream\Helpers;
 /**
  * Created by PhpStorm.
@@ -9,13 +10,13 @@ namespace Zodream\Helpers;
 class Disk {
     /**
      * 格式化容量
-     * @param $size
+     * @param int|float $size
      * @return string
      */
-    public static function size($size) {
+    public static function size(int|float $size): string {
         $sizes = array(' Bytes', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB');
         if ($size == 0) {
-            return('n/a');
+            return 'n/a';
         }
         return (round($size/pow(1024, ($i = floor(log($size, 1024)))), 2) . $sizes[$i]);
     }
@@ -26,7 +27,7 @@ class Disk {
      * @param string $b1
      * @return string
      */
-    public static function getRelationPath($a1, $b1) {
+    public static function getRelationPath(string $a1, string $b1): string {
         $a1 = explode('/', ltrim($a1, '/'));
         $b1 = explode('/', ltrim($b1, '/'));
         for($i = 0; isset($b1[$i], $a1[$i]); $i++){
@@ -36,7 +37,7 @@ class Disk {
         return implode('/', $a1);
     }
 
-    public static function getAbsolutePath($path) {
+    public static function getAbsolutePath(string $path): string {
         $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
         $parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
         $absolutes = array();

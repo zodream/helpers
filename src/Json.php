@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Zodream\Helpers;
 
 /**
@@ -8,7 +9,7 @@ namespace Zodream\Helpers;
  * Time: 17:01
  */
 class Json {
-    public static function decode($json, $isArray = true) {
+    public static function decode(mixed $json, bool $isArray = true) {
         if (!is_string($json)) {
             return $json;
         }
@@ -23,7 +24,7 @@ class Json {
      * @param int $option 默认不编码成 多字节 Unicode \u XXX
      * @return string
      */
-    public static function encode($args, $option = JSON_UNESCAPED_UNICODE) {
+    public static function encode(mixed $args, int $option = JSON_UNESCAPED_UNICODE) {
         if (is_object($args) && method_exists($args, 'toJson')) {
             return $args->toJson();
         }

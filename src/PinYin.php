@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Zodream\Helpers;
 /**
  * PHP 汉字转拼音
@@ -9,7 +10,7 @@ class PinYin {
      * 拼音字符转换图
      * @var array
      */
-    private static $_maps = array(
+    private static array $_maps = array(
         'a' => -20319, 'ai' => -20317, 'an' => -20304, 'ang' => -20295, 'ao' => -20292, 
         'ba' => -20283, 'bai' => -20265, 'ban' => -20257, 'bang' => -20242, 'bao' => -20230, 'bei' => -20051, 'ben' => -20036, 'beng' => -20032, 'bi' => -20026, 'bian' => -20002, 'biao' => -19990, 'bie' => -19986, 'bin' => -19982, 'bing' => -19976, 'bo' => -19805, 'bu' => -19784, 
         'ca' => -19775, 'cai' => -19774, 'can' => -19763, 'cang' => -19756, 'cao' => -19751, 'ce' => -19746, 'ceng' => -19741, 'cha' => -19739, 'chai' => -19728, 'chan' => -19725, 'chang' => -19715, 'chao' => -19540, 'che' => -19531, 'chen' => -19525, 'cheng' => -19515, 'chi' => -19500, 'chong' => -19484, 'chou' => -19479, 'chu' => -19467, 'chuai' => -19289, 'chuan' => -19288, 'chuang' => -19281, 'chui' => -19275, 'chun' => -19270, 'chuo' => -19263, 'ci' => -19261, 'cong' => -19249, 'cou' => -19243, 'cu' => -19242, 'cuan' => -19238, 'cui' => -19235, 'cun' => -19227, 'cuo' => -19224, 
@@ -41,7 +42,7 @@ class PinYin {
      * @param string $format 返回格式 [head:首字母|all:全拼音]
      * @return string
      */
-    public static function encode($arg,  $format = 'head'){
+    public static function encode(string $arg, string $format = 'head'): string {
         $arg = iconv('UTF-8',  'GBK',  $arg);
         $buffer = array();
         for ($i = 0,  $length = strlen($arg); $i < $length; $i++) {
@@ -63,10 +64,10 @@ class PinYin {
 
     /**
      * 中文转换到拼音(每次处理一个字符)
-     * @param number $word 待处理字符双字节
+     * @param int $word 待处理字符双字节
      * @return string 拼音
      */
-    private static function _toPinYin($word) {
+    private static function _toPinYin(int $word): string {
         if ($word > 0 && $word < 160 ) {
             return chr($word);
         }
@@ -83,10 +84,10 @@ class PinYin {
 
     /**
      * 获取首字母
-     * @param $arg
+     * @param string $arg
      * @return string
      */
-    public static function getFirst($arg) {
+    public static function getFirst(string $arg): string {
         $str = iconv('UTF-8', 'gb2312', $arg);//如果程序是gbk的，此行就要注释掉
         if (!preg_match('/^[\x7f-\xff]/', $str)) {
             return strtoupper($str[0]);

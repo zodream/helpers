@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Zodream\Helpers;
 
 use Zodream\Helpers\Xml\ArrayToXml;
@@ -11,7 +12,7 @@ class Xml {
      * @return array|object|mixed
      * @throws \Exception
      */
-    public static function decode($xml, $isArray = true) {
+    public static function decode(mixed $xml, bool $isArray = true) {
         if (!is_string($xml)) {
             return $xml;
         }
@@ -21,7 +22,7 @@ class Xml {
         return XmlToArray::createArray($xml);
     }
 
-    public static function specialDecode($xml) {
+    public static function specialDecode(string $xml) {
         return json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)),TRUE);
     }
 
@@ -30,7 +31,7 @@ class Xml {
      * @param string $root
      * @return string
      */
-    public static function encode(array $args, $root = 'root') {
+    public static function encode(array $args, string $root = 'root') {
         return ArrayToXml::createXML($root, $args)->saveXML();
     }
 
@@ -40,7 +41,7 @@ class Xml {
      * @param string $root
      * @return string
      */
-    public static function specialEncode(array $args, $root = 'xml') {
+    public static function specialEncode(array $args, string $root = 'xml') {
         return ArrayToXml::createXML($root, static::toSpecialArray($args))->saveXML();
     }
 
@@ -50,7 +51,7 @@ class Xml {
      * @param string|mixed $data
      * @return array|integer
      */
-    protected static function toSpecialArray($data) {
+    protected static function toSpecialArray(mixed $data) {
         if (is_integer($data)
             || is_bool($data)
             || is_float($data)
@@ -71,7 +72,7 @@ class Xml {
                 unset($item, $data[$key]);
                 continue;
             }
-            if (strpos($key, '@') === 0) {
+            if (str_starts_with($key, '@')) {
                 continue;
             }
             $item = static::toSpecialArray($item);

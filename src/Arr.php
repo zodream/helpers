@@ -1,4 +1,5 @@
-<?php 
+<?php
+declare(strict_types=1);
 namespace Zodream\Helpers;
 
 /**
@@ -10,6 +11,7 @@ namespace Zodream\Helpers;
 use ArrayAccess;
 use JsonSerializable;
 use Traversable;
+use Zodream\Spider\Support\Collection;
 
 class Arr {
 
@@ -18,7 +20,7 @@ class Arr {
      * @param array $data
      * @return array
      */
-    public static function format(array $data) {
+    public static function format(array $data): array {
         return array_map(function ($item) {
             $args = static::toArrOrNone($item);
             if (false !== $args) {
@@ -28,7 +30,7 @@ class Arr {
         }, $data);
     }
 
-    protected static function toArrOrNone($item) {
+    protected static function toArrOrNone(mixed $item): array|false {
         if (is_array($item)) {
             return static::format($item);
         }
@@ -52,7 +54,7 @@ class Arr {
         return false;
     }
 
-    public static function toArray($data) {
+    public static function toArray(mixed $data): array {
         $args = static::toArrOrNone($data);
         if (false !== $args) {
             return $args;
@@ -67,7 +69,7 @@ class Arr {
 	 * @param null $default
 	 * @return mixed
 	 */
-	public static function first(array $array, callable $callback, $default = null) {
+	public static function first(array $array, callable $callback, mixed $default = null): mixed {
 		foreach ($array as $key => $value) {
 			if (call_user_func($callback, $key, $value)) {
 				return $value;
@@ -86,8 +88,8 @@ class Arr {
      * @param string $pre 前缀
      * @return array
      */
-	public static function toFile(array $args, $link = null, $pre = null) {
-		$list = array();
+	public static function toFile(mixed $args, string $link = '', string $pre = ''): array {
+		$list = [];
 		if (is_array($args)) {
 			foreach ($args as $key => $value) {
 				if (is_int($key)) {
@@ -117,7 +119,7 @@ class Arr {
      * @param string $link 连接符
      * @return string
      */
-	public static function toString($args, $link  = '') {
+	public static function toString(mixed $args, string $link  = ''): string {
 		$str = '';
 		if (is_array($args)) {
 			foreach ($args as $value) {
@@ -135,7 +137,7 @@ class Arr {
      * @param  array  $array
      * @return array
      */
-    public static function collapse($array) {
+    public static function collapse(array $array): array {
         $results = [];
 
         foreach ($array as $values) {
@@ -158,7 +160,7 @@ class Arr {
      * @param  array|string  $keys
      * @return array
      */
-    public static function except($array, $keys) {
+    public static function except(array $array, array|string $keys): array {
         static::forget($array, $keys);
         return $array;
     }
@@ -171,7 +173,7 @@ class Arr {
      * @param  array|string  $keys
      * @return void
      */
-    public static function forget(&$array, $keys) {
+    public static function forget(array &$array, array|string $keys) {
         $original = &$array;
 
         $keys = (array) $keys;
@@ -383,7 +385,7 @@ class Arr {
      */
 	public static function getValues($name, array $args, $default = null, $link = ',') {
 		$names = explode($link, $name);
-        if (strpos($name, $link) === false ) {
+        if (!str_contains($name, $link)) {
             list($newKey, $arg, $oldKey) = self::_getValueByKeyWithDefault($name, $args, $default);
             if ($newKey == $oldKey) {
                 return $arg;

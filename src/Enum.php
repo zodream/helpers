@@ -1,6 +1,9 @@
 <?php
+declare(strict_types=1);
 namespace Zodream\Helpers;
 
+
+use ReflectionClass;
 
 abstract class Enum {
 

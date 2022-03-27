@@ -14,7 +14,7 @@ class Str {
      * @param string $value
      * @return mixed
      */
-	public static function value(mixed $value) {
+	public static function value(mixed $value): mixed {
 		return is_callable($value) ? call_user_func($value) : $value;
 	}
 
@@ -25,7 +25,7 @@ class Str {
 
     /**
      * 字符串转方法执行
-     * @param $str
+     * @param mixed $str
      * @param array $params
      * @param mixed $default
      * @return mixed|null

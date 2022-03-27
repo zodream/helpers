@@ -18,7 +18,7 @@ class Time {
      * @param string $format
      * @return string
      */
-	public static function format(int|string $time = '', $format = 'Y-m-d H:i:s'): string
+	public static function format(int|string $time = '', string $format = 'Y-m-d H:i:s'): string
     {
 		if (!empty($time) && !is_numeric($time)) {
 			$format = $time;
