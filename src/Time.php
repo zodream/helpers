@@ -156,10 +156,10 @@ class Time {
     /**
      * 获取月份的开始结束日期
      * @param integer $time
-     * @param string $format
+     * @param string|bool $format
      * @return array
      */
-    public static function month(int $time, string $format = 'Y-m-d'): array
+    public static function month(int $time, string|bool $format = 'Y-m-d'): array
     {
         $start_at = date('Y-m-01', $time);
         $end_at = date('Y-m-t', $time);
@@ -180,10 +180,10 @@ class Time {
     /**
      * 获取周的起止日期
      * @param integer $now
-     * @param string $format
+     * @param string|bool $format
      * @return array
      */
-    public static function week(int $now, string $format = 'Y-m-d'): array
+    public static function week(int $now, string|bool $format = 'Y-m-d'): array
     {
         $time = ('1' == date('w', $now)) ? strtotime('Monday', $now)
             : strtotime('last Monday', $now);
