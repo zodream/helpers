@@ -804,20 +804,31 @@ class Arr {
 	            continue;
             }
             if (in_array($maps[$key], ['int', 'integer'])) {
-	            $data[$key] = intval($data[$key]);
+	            $data[$key] = intval($item);
 	            continue;
             }
             if ($maps[$key] == 'float') {
-                $data[$key] = floatval($data[$key]);
+                $data[$key] = floatval($item);
                 continue;
             }
             if ($maps[$key] == 'double') {
-                $data[$key] = doubleval($data[$key]);
+                $data[$key] = doubleval($item);
                 continue;
             }
             if (in_array($maps[$key], ['bool', 'boolean'])) {
-                $data[$key] = $data[$key] > 0;
+                $data[$key] = Str::toBool($item);
                 continue;
+            }
+            if ($maps[$key] == 'datetime') {
+                $data[$key] = Time::format($item);
+                continue;
+            }
+            if ($maps[$key] == 'ago') {
+                $data[$key] = Time::ago($item);
+                continue;
+            }
+            if ($maps[$key] == 'array') {
+                $data[$key] = Json::decode($item);
             }
         }
         return $data;
