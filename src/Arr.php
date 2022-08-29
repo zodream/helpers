@@ -845,6 +845,9 @@ class Arr {
             $instance = new \ReflectionClass($class);
             $doc = $instance->getDocComment();
             unset($instance);
+            if (!is_string($doc)) {
+                return [];
+            }
             preg_match_all('/\@property\s+([a-z]+)\s+\$([a-z\d_]+)/i', $doc, $matches, PREG_SET_ORDER);
             return array_column($matches, 1, 2);
         };
