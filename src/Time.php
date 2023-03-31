@@ -95,25 +95,39 @@ class Time {
         $now = time();
         $diff = floor($now - $time);
         if ($diff < 1) {
-            return '刚刚';
+            return __('now');
         }
         if ($diff < 60) {
-            return $diff. '秒前';
+            return __('{time} second ago', [
+                'time' => $diff
+            ]);
         }
         if ($diff < 3600) {
-            return floor($diff / 60). '分钟前';
+            return __('{time} minute ago', [
+                'time' => floor($diff / 60)
+            ]);
         }
         if ($diff < 86400) {
-            return floor($diff / 3600). '小时前';
+            return __('{time} hour ago', [
+                'time' => floor($diff / 3600)
+            ]);
         }
         if ($diff < 2592000) {
-            return floor($diff / 86400). '天前';
+            return __('{time} day ago', [
+                'time' => floor($diff / 86400)
+            ]);
         }
         $year = date('Y', $time);
         if ($year === date('Y', $now)) {
-            return sprintf('%02d月%02d', date('m', $time), date('d', $time));
+            return __('{month}-{day}', [
+                'month' => sprintf('%02d', date('m', $time)),
+                'day' => sprintf('%02d', date('d', $time))
+            ]);
         }
-        return sprintf('%d年%02d月', $year, date('m', $time));
+        return __('{year}-{month}', [
+            'year' => $year,
+            'month' => sprintf('%02d', date('m', $time))
+        ]);
     }
 
     /**
