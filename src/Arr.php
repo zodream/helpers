@@ -253,7 +253,7 @@ class Arr {
      * @param  string|array|null  $key
      * @return array
      */
-    public static function pluck($array, $value, $key = null) {
+    public static function pluck($array, mixed $value, mixed $key = null): array {
         $results = [];
         list($value, $key) = static::explodePluckParameters($value, $key);
 
@@ -283,7 +283,7 @@ class Arr {
      * @param  mixed   $default
      * @return mixed
      */
-    public static function dataGet($target, $key, $default = null) {
+    public static function dataGet(mixed $target, mixed $key, mixed $default = null): mixed {
         if (is_null($key)) {
             return $target;
         }
