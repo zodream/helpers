@@ -39,7 +39,7 @@ class PinYin {
     /**
      * 将中文编码成拼音
      * @param string $arg utf8字符集数据
-     * @param string $format 返回格式 [head:首字母|all:全拼音]
+     * @param 'head'|'all' $format 返回格式 [head:首字母|all:全拼音]
      * @return string
      */
     public static function encode(string $arg, string $format = 'head'): string {

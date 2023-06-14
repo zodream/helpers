@@ -610,7 +610,7 @@ class Arr {
      * @param array $args
      * @return bool
      */
-	public static function isAssoc($args): bool {
+	public static function isAssoc(mixed $args): bool {
 		return is_array($args) && array_keys($args) !== range(0, count($args) - 1);
 	}
 
@@ -619,7 +619,7 @@ class Arr {
      * @param $args
      * @return bool
      */
-	public static function isMultidimensional($args) {
+	public static function isMultidimensional(mixed $args) {
         if (!is_array($args)) {
             return false;
         }

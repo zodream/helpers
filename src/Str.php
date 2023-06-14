@@ -181,7 +181,7 @@ class Str {
 	 * @param null|string $value
 	 * @return string 合并后的值
 	 */
-	public static function urlBindValue($url, $key , $value = null) {
+	public static function urlBindValue(string $url, string|array $key, ?string $value = null): string {
 		$arr = explode('?', $url, 2);
 		$arr = str_replace('&amp;', '&', $arr);      //解决 & 被转义
 		$data = array();
