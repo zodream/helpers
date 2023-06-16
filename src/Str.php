@@ -332,6 +332,17 @@ class Str {
 		return preg_replace('/'.$search.'$/', $replace, $arg, 1);
 	}
 
+    /**
+     * 从字符串尾部删除指定字符串
+     * @param string $haystack
+     * @param string|null $needle 指定字符串
+     * @return string
+     */
+    public static function endTrim(string $haystack, ?string $needle): string {
+        return !empty($needle) && str_ends_with($haystack, $needle) ? substr($haystack, 0,
+            strlen($haystack) - strlen($needle)) : $haystack;
+    }
+
     public static function parseCallback(string $callback, mixed $default = null): array {
         return static::contains($callback, '@') ? explode('@', $callback, 2) : [$callback, $default];
     }
@@ -354,7 +365,7 @@ class Str {
      * @return string
      */
     public static function unStudly(string $camelCaps, string $separator = '_'): string {
-        return strtolower(preg_replace('/([a-z])([A-Z])/', "$1" . $separator . "$2", $camelCaps));
+        return empty($camelCaps) ? $camelCaps : strtolower(preg_replace('/([a-z])([A-Z])/', "$1" . $separator . "$2", $camelCaps));
     }
 
 	/**

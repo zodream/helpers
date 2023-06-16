@@ -44,7 +44,7 @@ class Tree {
      * @param string|int $id
      * @param string $key
      * @param string $id_key
-     * @return array
+     * @return int[] 不包含自身id
      */
 	public static function getTreeParent(array $data, string|int $id, string $key = 'parent_id', string $id_key = 'id'): array {
 		$result = [];
@@ -116,7 +116,6 @@ class Tree {
             }
             unset($currentHierarchy);
         }
-
         return $root;
     }
 }
