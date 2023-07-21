@@ -9,13 +9,13 @@ namespace Zodream\Helpers\Security;
  */
 class Hash {
 
-    protected static $rounds = 10;
+    protected static int $rounds = 10;
 
     /**
      * 生成hash值
      * @param string $value
      * @param array $options
-     * @return bool|string
+     * @return string
      */
     public static function make(string $value, array $options = array()): string {
         return password_hash($value, PASSWORD_BCRYPT, ['cost' => static::cost($options)]);
@@ -38,7 +38,7 @@ class Hash {
      * @param  array   $options
      * @return bool
      */
-    public static function needsRehash($hashedValue, array $options = []) {
+    public static function needsRehash(string $hashedValue, array $options = []) {
         return password_needs_rehash($hashedValue, PASSWORD_BCRYPT, [
             'cost' => static::cost($options),
         ]);
@@ -50,8 +50,8 @@ class Hash {
      * @param  int  $rounds
      * @return $this
      */
-    public static function setRounds($rounds) {
-        static::$rounds = (int) $rounds;
+    public static function setRounds(int $rounds): void {
+        static::$rounds = $rounds;
     }
 
     /**
@@ -60,7 +60,7 @@ class Hash {
      * @param  array  $options
      * @return int
      */
-    protected static function cost(array $options = []) {
+    protected static function cost(array $options = []): int {
         return $options['rounds'] ?? static::$rounds;
     }
 }
