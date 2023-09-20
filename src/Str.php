@@ -55,6 +55,24 @@ class Str {
     }
 
     /**
+     * 判断结尾是否是指定字符，排除？
+     * @param string $haystack
+     * @param string $needle
+     * @return bool
+     */
+    public static function isPathEndWith(string $haystack, string $needle): bool {
+        $i = strpos($haystack, '?');
+        if ($i === false) {
+            return str_ends_with($haystack, $needle);
+        }
+        $len = strlen($needle);
+        if ($i < $len) {
+            return false;
+        }
+        return substr($haystack, $i - $len, $len) === $needle;
+    }
+
+    /**
      * Determine if a given string contains a given substring.
      *
      * @param  string  $haystack
