@@ -139,12 +139,4 @@ class Rsa extends BaseSecurity {
         return $this->decryptPublicEncrypt($data);
     }
 
-    public function __destruct() {
-        if (is_resource($this->publicKey)) {
-            openssl_free_key($this->publicKey);
-        }
-        if (is_resource($this->privateKey)) {
-            openssl_free_key($this->privateKey);
-        }
-    }
 }
