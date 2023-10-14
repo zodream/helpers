@@ -100,7 +100,8 @@ class BinaryReader implements Stringable {
 
     public function read(int $length): string {
         if ($this->length() < $this->position + $length) {
-            throw new OutOfBoundsException('Trying to read too many bytes');
+            throw new OutOfBoundsException(sprintf('Trying to read too many bytes[%d+%d>%d]',
+                $this->position, $length, $this->length()));
         }
         $buffer = substr($this->content, $this->position + 1, $length);
         $this->position += $length;
@@ -121,37 +122,37 @@ class BinaryReader implements Stringable {
 
     public function readUint16(): int {
         $bytes = $this->read(2);
-        $unpacked = unpack('nint', $bytes);
-        assert(is_array($unpacked) && array_key_exists('int', $unpacked));
-        return $unpacked['int'];
+        $unpacked = unpack('n', $bytes);
+        assert(is_array($unpacked));
+        return current($unpacked);
     }
 
     public function readUint32(): int {
         $bytes = $this->read(4);
-        $unpacked = unpack('Nint', $bytes);
-        assert(is_array($unpacked) && array_key_exists('int', $unpacked));
-        return $unpacked['int'];
+        $unpacked = unpack('N', $bytes);
+        assert(is_array($unpacked));
+        return current($unpacked);
     }
 
     public function readUint64(): int {
         $bytes = $this->read(8);
-        $unpacked = unpack('Jint', $bytes);
-        assert(is_array($unpacked) && array_key_exists('int', $unpacked));
-        return $unpacked['int'];
+        $unpacked = unpack('J', $bytes);
+        assert(is_array($unpacked));
+        return current($unpacked);
     }
 
     public function readFloat(): int {
         $bytes = $this->read(4);
         $unpacked = unpack('G', $bytes);
-        assert(is_array($unpacked) && array_key_exists(1, $unpacked));
-        return $unpacked[1];
+        assert(is_array($unpacked));
+        return current($unpacked);
     }
 
     public function readDouble(): int {
         $bytes = $this->read(8);
         $unpacked = unpack('E', $bytes);
-        assert(is_array($unpacked) && array_key_exists(1, $unpacked));
-        return $unpacked[1];
+        assert(is_array($unpacked));
+        return current($unpacked);
     }
 
     /**
