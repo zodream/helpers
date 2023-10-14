@@ -23,7 +23,7 @@ class Jwt extends BaseSecurity {
     
     protected string $key;
 
-    public function setAlgo(string $algo) {
+    public function setAlgo(string $algo): static {
         $this->algo = strtoupper($algo);
         return $this;
     }
@@ -32,7 +32,7 @@ class Jwt extends BaseSecurity {
         return $this->algo;
     }
 
-    public function setKey(string $key) {
+    public function setKey(string $key): static {
         $this->key = $key;
         return $this;
     }
@@ -41,11 +41,11 @@ class Jwt extends BaseSecurity {
         return $this->key;
     }
     
-    public function encrypt($payload): string {
+    public function encrypt($data): string {
         $header = array('typ' => 'JWT', 'alg' => $this->algo); 
         $segments = array(
             $this->urlsafeB64Encode(json_encode($header)), 
-            $this->urlsafeB64Encode(json_encode($payload)) 
+            $this->urlsafeB64Encode(json_encode($data))
         );
         $signing_input = implode('.', $segments);
         $signature = $this->sign($signing_input, $this->key, $this->algo);
@@ -53,32 +53,32 @@ class Jwt extends BaseSecurity {
         return implode('.', $segments);
     }
 
-    public function decrypt(string $jwt) {
-        $tks = explode('.', $jwt);
+    public function decrypt(string $data) {
+        $tks = explode('.', $data);
         if (count($tks) != 3) {
             throw new Exception(
                 __('Wrong number of segments')
             );
         }
-        list($headb64, $payloadb64, $cryptob64) = $tks;
-        if (null === ($header = json_decode($this->urlsafeB64Decode($headb64)))) {
+        list($headB64, $payloadB64, $cryptoB64) = $tks;
+        if (null === ($header = json_decode($this->urlsafeB64Decode($headB64)))) {
             throw new Exception(
                 __('Invalid segment encoding')
             );
         }
-        if (null === $payload = json_decode($this->urlsafeB64Decode($payloadb64))) {
+        if (null === $payload = json_decode($this->urlsafeB64Decode($payloadB64))) {
             throw new Exception(
                 __('Invalid segment encoding')
             );
         }
-        $sig = $this->urlsafeB64Decode($cryptob64);
+        $sig = $this->urlsafeB64Decode($cryptoB64);
         if (isset($this->key)) {
             if (empty($header->alg)) {
                 throw new DomainException(
                     __('Empty algorithm')
                 );
             }
-            if (!$this->verifySignature($sig, "$headb64.$payloadb64", $this->key, $this->algo)) {
+            if (!$this->verifySignature($sig, sprintf('%s.%s', $headB64, $payloadB64), $this->key, $this->algo)) {
                 throw new UnexpectedValueException(
                     __('Signature verification failed')
                 );
@@ -87,47 +87,33 @@ class Jwt extends BaseSecurity {
         return $payload;
     }
 
-    private function verifySignature($signature, $input, $key, $algo) {
-        switch ($algo) {
-            case'HS256':
-            case'HS384':
-            case'HS512':
-                return $this->sign($input, $key, $algo) === $signature;
-            case 'RS256':
-                return (boolean) openssl_verify($input, $signature, $key, OPENSSL_ALGO_SHA256);
-            case 'RS384':
-                return (boolean) openssl_verify($input, $signature, $key, OPENSSL_ALGO_SHA384);
-            case 'RS512':
-                return (boolean) openssl_verify($input, $signature, $key, OPENSSL_ALGO_SHA512);
-            default:
-                throw new Exception(
-                    __('Unsupported or invalid signing algorithm.')
-                );
-        }
+    private function verifySignature(string $signature, string $input, $key, string $algo): bool {
+        return match ($algo) {
+            'HS256', 'HS384', 'HS512' => $this->sign($input, $key, $algo) === $signature,
+            'RS256' => (boolean)openssl_verify($input, $signature, $key, OPENSSL_ALGO_SHA256),
+            'RS384' => (boolean)openssl_verify($input, $signature, $key, OPENSSL_ALGO_SHA384),
+            'RS512' => (boolean)openssl_verify($input, $signature, $key, OPENSSL_ALGO_SHA512),
+            default => throw new Exception(
+                __('Unsupported or invalid signing algorithm.')
+            ),
+        };
     }
 
-    private function sign($input, $key, $algo) {
-        switch ($algo) {
-            case 'HS256':
-                return hash_hmac('sha256', $input, $key, true);
-            case 'HS384':
-                return hash_hmac('sha384', $input, $key, true);
-            case 'HS512':
-                return hash_hmac('sha512', $input, $key, true);
-            case 'RS256':
-                return $this->generateRSASignature($input, $key, OPENSSL_ALGO_SHA256);
-            case 'RS384':
-                return $this->generateRSASignature($input, $key, OPENSSL_ALGO_SHA384);
-            case 'RS512':
-                return $this->generateRSASignature($input, $key, OPENSSL_ALGO_SHA512);
-            default:
-                throw new Exception(
-                    __('Unsupported or invalid signing algorithm.')
-                );
-        }
+    private function sign(string $input, $key, string $algo): string {
+        return match ($algo) {
+            'HS256' => hash_hmac('sha256', $input, $key, true),
+            'HS384' => hash_hmac('sha384', $input, $key, true),
+            'HS512' => hash_hmac('sha512', $input, $key, true),
+            'RS256' => $this->generateRSASignature($input, $key, OPENSSL_ALGO_SHA256),
+            'RS384' => $this->generateRSASignature($input, $key, OPENSSL_ALGO_SHA384),
+            'RS512' => $this->generateRSASignature($input, $key, OPENSSL_ALGO_SHA512),
+            default => throw new Exception(
+                __('Unsupported or invalid signing algorithm.')
+            ),
+        };
     }
 
-    private function generateRSASignature($input, $key, $algo) { 
+    private function generateRSASignature(string $input, $key, int|string $algo): string {
         if (!openssl_sign($input, $signature, $key, $algo)) { 
             throw new Exception(
                 __('Unable to sign data.')
@@ -136,16 +122,15 @@ class Jwt extends BaseSecurity {
         return $signature; 
     } 
     
-    private function urlSafeB64Encode($data) { 
-        $b64 = base64_encode($data); 
-        $b64 = str_replace(array('+', '/', '\r', '\n', '='), 
+    private function urlSafeB64Encode(string $data): string {
+        $b64 = base64_encode($data);
+        return str_replace(array('+', '/', '\r', '\n', '='),
             array('-', '_'),
             $b64
-        ); 
-        return $b64; 
+        );
     }
  
-    private function urlSafeB64Decode($b64) { 
+    private function urlSafeB64Decode(string $b64): string {
         $b64 = str_replace(array('-', '_'), 
             array('+', '/'), 
             $b64
