@@ -55,55 +55,6 @@ class Html {
         $content = preg_replace('/(\<.+?\>)|(\&nbsp;)+/', '', htmlspecialchars_decode($content));
         return Str::substr($content, 0, $length);
     }
-    
-    /**
-     * 将一个URL转换为完整URL
-     * PHP将相对路径URL转换为绝对路径URL
-     * @param string $srcUrl
-     * @param string $baseUrl
-     * @return string
-     */
-    public static function formatUrl(string $srcUrl, string $baseUrl): string {
-        $srcInfo = parse_url($srcUrl);
-        if(isset($srcInfo['scheme'])) {
-            return $srcUrl;
-        }
-        $baseInfo = parse_url($baseUrl);
-        $url = $baseInfo['scheme'].'://'.$baseInfo['host'];
-        if(str_starts_with($srcInfo['path'], '/')) {
-            $path = $srcInfo['path'];
-        }else{
-            $filename=  basename($baseInfo['path']);
-            //兼容基础url是列表
-            if(!str_contains($filename, ".")){
-                $path = dirname($baseInfo['path']).'/'.$filename.'/'.$srcInfo['path'];
-            }else{
-                $path = dirname($baseInfo['path']).'/'.$srcInfo['path'];
-            }
-
-        }
-        $rst = array();
-        $path_array = explode('/', $path);
-        if(!$path_array[0]) {
-            $rst[] = '';
-        }
-        foreach ($path_array AS $key => $dir) {
-            if ($dir == '..') {
-                if (end($rst) == '..') {
-                    $rst[] = '..';
-                }elseif(!array_pop($rst)) {
-                    $rst[] = '..';
-                }
-            }elseif($dir && $dir != '.') {
-                $rst[] = $dir;
-            }
-        }
-        if(!end($path_array)) {
-            $rst[] = '';
-        }
-        $url .= implode('/', $rst);
-        return str_replace('\\', '/', $url);
-    }
 
     /**
      * 编码html
@@ -120,6 +71,20 @@ class Html {
             return Str::substr($text, 0, $length, true);
         }
         return $text;
+    }
+
+    /**
+     * 将内容简单的转化为 html
+     * @param string $content
+     * @return string
+     */
+    public static function fromText(mixed $content): string {
+        return implode('', array_map(function ($line) {
+            if (empty($line)) {
+                return '<p></p>';
+            }
+            return sprintf('<p>&nbsp;&nbsp;&nbsp;&nbsp;%s</p>', $line);
+        }, explode("\n", (string)$content)));
     }
 
     /**

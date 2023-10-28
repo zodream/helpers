@@ -214,7 +214,7 @@ class BinaryReader implements Stringable {
     /**
      * 判断接下来是哪一个字符串
      * @param string ...$items
-     * @return int
+     * @return int 返回字符在全部查找的索引，-1 才表示不是
      */
     public function nextIs(string|int ...$items): int {
         if (!$this->canNext()) {
