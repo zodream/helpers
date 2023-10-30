@@ -76,14 +76,16 @@ class Html {
     /**
      * 将内容简单的转化为 html
      * @param string $content
+     * @param bool $lineSpace 每行子前是否自动添加四个空格
      * @return string
      */
-    public static function fromText(mixed $content): string {
-        return implode('', array_map(function ($line) {
+    public static function fromText(mixed $content, bool $lineSpace = true): string {
+        return implode('', array_map(function ($line) use ($lineSpace) {
             if (empty($line)) {
                 return '<p></p>';
             }
-            return sprintf('<p>&nbsp;&nbsp;&nbsp;&nbsp;%s</p>', $line);
+            return sprintf('<p>%s%s</p>', $lineSpace ?
+                '&nbsp;&nbsp;&nbsp;&nbsp;' : '', $line);
         }, explode("\n", (string)$content)));
     }
 
