@@ -35,8 +35,7 @@ class Time {
      * @param null $time
      * @return string
      */
-	public static function timestamp($time = null): string
-    {
+	public static function timestamp($time = null): string {
         if (is_null($time)) {
             $time = time();
         }
@@ -51,8 +50,7 @@ class Time {
      * @return string
      * @throws Exception
      */
-	public static function isTimeAgo(int $time, int $maxSecond = 0, string $maxFormat = 'Y-m-d'): string
-    {
+	public static function isTimeAgo(int $time, int $maxSecond = 0, string $maxFormat = 'Y-m-d'): string {
 		if (empty($time)) {
 			return '';
 		}
@@ -143,8 +141,7 @@ class Time {
      * @param float $start 以秒为单位 millisecond() 获取到的值
      * @return float
      */
-    public static function elapsedTime(float $start): float
-    {
+    public static function elapsedTime(float $start): float {
         return round((self::millisecond() - $start) * 1000, 2);
     }
 
@@ -155,8 +152,7 @@ class Time {
      * @param string $format
      * @return array
      */
-    public static function rangeDate(string $start, string $end, string $format = 'Y-m-d'): array
-    {
+    public static function rangeDate(string $start, string $end, string $format = 'Y-m-d'): array {
         $day = 86400;
         $start = strtotime($start);
         $end = strtotime($end) + $day;
@@ -173,8 +169,7 @@ class Time {
      * @param string|bool $format
      * @return array
      */
-    public static function month(int $time, string|bool $format = 'Y-m-d'): array
-    {
+    public static function month(int $time, string|bool $format = 'Y-m-d'): array {
         $start_at = date('Y-m-01', $time);
         $end_at = date('Y-m-t', $time);
         if ($format === 'Y-m-d') {
@@ -197,8 +192,7 @@ class Time {
      * @param string|bool $format
      * @return array
      */
-    public static function week(int $now, string|bool $format = 'Y-m-d'): array
-    {
+    public static function week(int $now, string|bool $format = 'Y-m-d'): array {
         $time = ('1' == date('w', $now)) ? strtotime('Monday', $now)
             : strtotime('last Monday', $now);
         $end = strtotime('Sunday', $now) + 86399;
