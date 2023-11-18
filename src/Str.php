@@ -192,41 +192,6 @@ class Str {
 	}
 
 	/**
-	 * 替换url中的参数
-	 *
-	 * @param string $url
-	 * @param string|array $key
-	 * @param null|string $value
-	 * @return string 合并后的值
-	 */
-	public static function urlBindValue(string $url, string|array $key, ?string $value = null): string {
-		$arr = explode('?', $url, 2);
-		$arr = str_replace('&amp;', '&', $arr);      //解决 & 被转义
-		$data = array();
-		if (count($arr) > 1) {
-			parse_str($arr[1], $data);
-		}
-		if (!is_null($value)) {
-			$data[$key] = $value;
-            return $arr[0].'?'.http_build_query($data);
-		}
-        if (is_array($key)) {
-            foreach ($key as $k => $val) {
-                if (!is_integer($k)) {
-                    $data[$k] = $val;
-                    continue;
-                }
-                $temps = self::explode($val, '=', 2);
-                $data[$temps[0]] = $temps[1];
-            }
-        } else if (is_string($key)) {
-            $keys = array();
-            parse_str($key, $keys);
-            $data = array_merge($data, $keys);
-        }
-		return $arr[0].'?'.http_build_query($data);
-	}
-	/**
 	 * 生成简单的随机字符串
 	 * @param  int  $length
 	 * @return string
@@ -265,7 +230,7 @@ class Str {
 	 * @param string $string
 	 * @return integer
 	 */
-	public static function byteLength(string $string) {
+	public static function byteLength(string $string): int {
 		return mb_strlen($string, '8bit');
 	}
 
@@ -295,12 +260,12 @@ class Str {
 	}
 
 	/**
-	 * EXPLODE STRING BY ARRAY
+	 * 根据多个字符拆分
 	 * @param array $delimiters
-	 * @param $string
+	 * @param string $string
 	 * @return array
 	 */
-	public static function multiExplode(array $delimiters, $string) {
+	public static function multiExplode(array $delimiters, string $string): array {
 		$ready = str_replace($delimiters, $delimiters[0], $string);
 		return explode($delimiters[0], $ready);
 	}
@@ -385,22 +350,6 @@ class Str {
     public static function unStudly(string $camelCaps, string $separator = '_'): string {
         return empty($camelCaps) ? $camelCaps : strtolower(preg_replace('/([a-z])([A-Z])/', "$1" . $separator . "$2", $camelCaps));
     }
-
-	/**
-	 * UTF8字符串的长度
-	 * @param string $str
-	 * @return int
-	 */
-	public static function absLength(string $str): int {
-		if (empty($str)) {
-			return 0;
-		}
-		if (function_exists('mb_strlen')) {
-			return mb_strlen($str,'utf-8');
-		}
-        preg_match_all("/./u", $str, $ar);
-        return count($ar[0]);
-	}
 
     /**
      * 中文截取，支持gb2312,gbk,utf-8,big5
