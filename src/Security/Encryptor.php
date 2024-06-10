@@ -96,8 +96,15 @@ class Encryptor extends BaseSecurity {
         if (empty($key)) {
             $key = time();
         }
-        return $this->mapToArray((string)$key, function (string $i) {
+        $items = $this->mapToArray((string)$key, function (string $i) {
             return intval($i);
         });
+        $last = $items[count($items) - 1];
+        $offset = $last % 2;
+        for ($i = 0; $i < count($items); $i += 2) {
+            $pos = $i + $offset;
+            $items[$pos] = ($items[$pos] + $last) % 10;
+        }
+        return $items;
     }
 }
