@@ -62,7 +62,7 @@ class Html {
      * @param int $length 大于0则需要截取
      * @return string
      */
-    public static function text(?string $html, int $length = 0): string {
+    public static function text(string|null $html, int $length = 0): string {
         if (empty($html)) {
             return '';
         }

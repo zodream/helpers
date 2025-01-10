@@ -321,7 +321,7 @@ class Str {
      * @param string|null $needle 指定字符串
      * @return string
      */
-    public static function endTrim(string $haystack, ?string $needle): string {
+    public static function endTrim(string $haystack, string|null $needle): string {
         return !empty($needle) && str_ends_with($haystack, $needle) ? substr($haystack, 0,
             strlen($haystack) - strlen($needle)) : $haystack;
     }

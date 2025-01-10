@@ -216,7 +216,7 @@ class Arr {
      * @param  mixed  $default
      * @return mixed
      */
-    public static function last($array, callable $callback = null, $default = null) {
+    public static function last($array, callable|null $callback = null, $default = null) {
         if (is_null($callback)) {
             return empty($array) ? Str::value($default) : end($array);
         }
