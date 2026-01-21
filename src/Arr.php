@@ -803,35 +803,25 @@ class Arr {
 	        if (!isset($maps[$key])) {
 	            continue;
             }
-            if (in_array($maps[$key], ['int', 'integer'])) {
-	            $data[$key] = intval($item);
-	            continue;
-            }
-            if ($maps[$key] == 'float') {
-                $data[$key] = floatval($item);
-                continue;
-            }
-            if ($maps[$key] == 'double') {
-                $data[$key] = doubleval($item);
-                continue;
-            }
-            if (in_array($maps[$key], ['bool', 'boolean'])) {
-                $data[$key] = Str::toBool($item);
-                continue;
-            }
-            if ($maps[$key] == 'datetime') {
-                $data[$key] = Time::format($item);
-                continue;
-            }
-            if ($maps[$key] == 'ago') {
-                $data[$key] = Time::ago($item);
-                continue;
-            }
-            if ($maps[$key] == 'array') {
-                $data[$key] = Json::decode($item);
-            }
+            $data[$key] = static::changeType($item, $maps[$key]);
         }
         return $data;
+    }
+
+    /**
+     * 转换类型
+     */
+    public static function changeType(mixed $value, string $type): mixed {
+        return match($type) {
+            'int', 'integer' => intval($value),
+            'float' => floatval($value),
+            'double' => doubleval($value),
+            'bool', 'boolean' => Str::toBool($value),
+            'datetime' => Time::format($value),
+            'ago' => Time::ago($value),
+            'array' => Json::decode($value),
+            default => $value
+        };
     }
 
     /**
@@ -840,7 +830,7 @@ class Arr {
      * @return bool|array
      * @throws \Exception
      */
-    public static function getRealType($class) {
+    public static function getRealType($class): array {
         $callback = function () use ($class) {
             $instance = new \ReflectionClass($class);
             $doc = $instance->getDocComment();
