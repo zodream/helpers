@@ -611,7 +611,7 @@ class Arr {
      * @return bool
      */
 	public static function isAssoc(mixed $args): bool {
-		return is_array($args) && array_keys($args) !== range(0, count($args) - 1);
+		return is_array($args) && !array_is_list($args);
 	}
 
     /**
