@@ -209,7 +209,7 @@ class Time {
      * @return string
      */
     public static function weekFormat(int|string $time, string $prefix = '星期'): string {
-        if (!is_integer($time)) {
+        if (!is_int($time)) {
             $time = strtotime($time);
         }
         $maps = ['日', '一', '二', '三', '四', '五', '六'];

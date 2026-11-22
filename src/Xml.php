@@ -52,7 +52,7 @@ class Xml {
      * @return array|integer
      */
     protected static function toSpecialArray(mixed $data) {
-        if (is_integer($data)
+        if (is_int($data)
             || is_bool($data)
             || is_float($data)
             || is_double($data)) {
