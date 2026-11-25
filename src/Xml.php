@@ -71,7 +71,7 @@ class Xml {
                 unset($item, $data[$key]);
                 continue;
             }
-            if (str_starts_with($key, '@')) {
+            if (is_string($key) && str_starts_with($key, '@')) {
                 continue;
             }
             $item = static::toSpecialArray($item);
