@@ -421,7 +421,7 @@ class Arr {
         );
     }
 
-	public static function get($array, $key, $default = null) {
+	public static function get(mixed $array, mixed $key, mixed $default = null): mixed {
 		if (is_null($key)) {
 			return $array;
 		}
@@ -442,7 +442,7 @@ class Arr {
 		return $array;
 	}
 
-    public static function set(&$array, $key, $value)
+    public static function set(mixed &$array, mixed $key, mixed $value)
     {
         if (is_null($key)) {
             return $array = $value;
@@ -472,16 +472,14 @@ class Arr {
         return $array;
     }
 
-    public static function exists($array, $key)
-    {
+    public static function exists(mixed $array, mixed $key): bool {
         if ($array instanceof ArrayAccess) {
             return $array->offsetExists($key);
         }
         return array_key_exists($key, $array);
     }
 
-    public static function has($array, $keys)
-    {
+    public static function has(mixed $array, mixed $keys): bool {
         $keys = (array) $keys;
 
         if (! $array || $keys === []) {
@@ -507,8 +505,7 @@ class Arr {
         return true;
     }
 
-    public static function accessible($value)
-    {
+    public static function accessible(mixed $value) {
         return is_array($value) || $value instanceof ArrayAccess;
     }
 

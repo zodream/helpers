@@ -54,8 +54,7 @@ class Xml {
     protected static function toSpecialArray(mixed $data) {
         if (is_int($data)
             || is_bool($data)
-            || is_float($data)
-            || is_double($data)) {
+            || is_float($data)) {
             return $data;
         }
         if (is_object($data)) {
