@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Zodream\Helpers\Xml;
 /**
  * Created by PhpStorm.
