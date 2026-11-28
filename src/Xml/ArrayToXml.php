@@ -18,11 +18,12 @@ namespace Zodream\Helpers\Xml;
  *       echo $xml->saveXML();
  */
 use DOMDocument;
+use DOMNode;
 use Exception;
 
 class ArrayToXml {
-    private static $xml = null;
-    private static $encoding = 'UTF-8';
+    private static DomDocument|null $xml = null;
+    private static string $encoding = 'UTF-8';
 
     /**
      * Initialize the root XML node [optional]
@@ -30,7 +31,7 @@ class ArrayToXml {
      * @param $encoding
      * @param $format_output
      */
-    public static function init($version = '1.0', $encoding = 'UTF-8', $format_output = true) {
+    public static function init(string $version = '1.0', string $encoding = 'UTF-8', bool $format_output = true) {
         self::$xml = new DomDocument($version, $encoding);
         self::$xml->formatOutput = $format_output;
         self::$encoding = $encoding;
@@ -42,7 +43,7 @@ class ArrayToXml {
      * @param array $arr - aray to be converterd
      * @return DomDocument
      */
-    public static function &createXML($node_name, $arr = array()) {
+    public static function &createXML(string $node_name, mixed $arr = []) {
         $xml = self::getXMLRoot();
         $xml->appendChild(self::convert($node_name, $arr));
         self::$xml = null;    // clear the xml node in the class for 2nd time use.
@@ -56,7 +57,7 @@ class ArrayToXml {
      * @return DOMNode
      * @throws Exception
      */
-    private static function &convert($node_name, $arr = array()) {
+    private static function &convert(string $node_name, mixed $arr = []) : DOMNode {
 
         //print_arr($node_name);
         $xml = self::getXMLRoot();
@@ -92,7 +93,7 @@ class ArrayToXml {
         //create subnodes using recursion
         if(is_array($arr)){
             // recurse to get the node for that key
-            foreach($arr as $key=>$value){
+            foreach($arr as $key => $value){
                 if(!self::isValidTagName($key)) {
                     throw new Exception('[Array2XML] Illegal character in tag name. tag: '.$key.' in node: '.$node_name);
                 }
@@ -123,25 +124,25 @@ class ArrayToXml {
     /*
      * Get the root XML node, if there isn't one, create it.
      */
-    private static function getXMLRoot(){
+    private static function getXMLRoot(): DOMDocument {
         if(empty(self::$xml)) {
             self::init();
         }
         return self::$xml;
     }
 
-    private static function bool2str($value){
+    private static function bool2str(mixed $value): string {
         if ($value === true) {
             return 'true';
         }
         if ($value === false) {
             return 'false';
         }
-        return $value;
+        return (string)$value;
     }
 
-    private static function isValidTagName($tag){
+    private static function isValidTagName(string $tag): bool {
         $pattern = '/^[a-z_]+[a-z0-9\:\-\.\_]*[^:]*$/i';
-        return preg_match($pattern, $tag, $matches) && $matches[0] == $tag;
+        return preg_match($pattern, $tag, $matches) && $matches[0] === $tag;
     }
 }

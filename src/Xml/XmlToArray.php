@@ -17,11 +17,12 @@ namespace Zodream\Helpers\Xml;
  *       $array = XML2Array::createArray($xml);
  */
 use DOMDocument;
+use DOMElement;
 use Exception;
 
 class XmlToArray {
-    private static $xml = null;
-    private static $encoding = 'UTF-8';
+    private static DOMDocument|null $xml = null;
+    private static string $encoding = 'UTF-8';
 
     /**
      * Initialize the root XML node [optional]
@@ -29,7 +30,7 @@ class XmlToArray {
      * @param $encoding
      * @param $format_output
      */
-    public static function init($version = '1.0', $encoding = 'UTF-8', $format_output = true) {
+    public static function init(string $version = '1.0', string $encoding = 'UTF-8', bool $format_output = true) {
         self::$xml = new DOMDocument($version, $encoding);
         self::$xml->formatOutput = $format_output;
         self::$encoding = $encoding;
@@ -37,13 +38,13 @@ class XmlToArray {
 
     /**
      * Convert an XML to Array
-     * @param $input_xml
-     * @return DOMDocument
+     * @param DOMDocument $input_xml
+     * @return array
      * @throws Exception
      * @internal param string $node_name - name of the root node to be converted
      * @internal param array $arr - aray to be converterd
      */
-    public static function &createArray($input_xml) {
+    public static function &createArray(mixed $input_xml): array {
         $xml = self::getXMLRoot();
         if(is_string($input_xml)) {
             $parsed = $xml->loadXML($input_xml);
@@ -51,7 +52,7 @@ class XmlToArray {
                 throw new Exception('[XML2Array] Error parsing the XML string.');
             }
         } else {
-            if(get_class($input_xml) != 'DOMDocument') {
+            if(get_class($input_xml) !== 'DOMDocument') {
                 throw new Exception('[XML2Array] The input XML object should be of type: DOMDocument.');
             }
             $xml = self::$xml = $input_xml;
@@ -66,7 +67,7 @@ class XmlToArray {
      * @param mixed $node - XML as a string or as an object of DOMDocument
      * @return mixed
      */
-    private static function &convert($node) {
+    private static function &convert(DOMElement $node): array {
         $output = array();
 
         switch ($node->nodeType) {
@@ -133,7 +134,7 @@ class XmlToArray {
     /*
      * Get the root XML node, if there isn't one, create it.
      */
-    private static function getXMLRoot(){
+    private static function getXMLRoot(): DOMDocument {
         if(empty(self::$xml)) {
             self::init();
         }
